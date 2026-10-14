@@ -829,6 +829,29 @@ Splitting r² into r₁·r₂ keeps Newton's law exact when r is the geometric m
 
 The definition fixes what G is, not why it has its value. That value still comes from one observation, such as the unit-orbit period or the Cavendish twist. In unit-free form it is α_G = 5.9×10⁻³⁹, the distance of ordinary matter below the Planck balance point. No current theory explains that number, and why gravity is about 10³⁸ times weaker than the other forces remains the open hierarchy problem.
 
+### Hypothesis: α_G as a floating-point residue
+
+Shaimaa Said Soltan's hypothesis: α_G = 5.9×10⁻³⁹ is a floating-point residue of a machine working at a maximum accuracy near 10⁻³⁸. It is speculative, and it does not survive four checks.
+
+The near-match is real. In single-precision floating point (IEEE 754 float32):
+
+| float32 limit | Value | As a power of 2 |
+| --- | --- | --- |
+| Smallest normal number | 1.175×10⁻³⁸ | 2⁻¹²⁶ |
+| Next step down | 5.877×10⁻³⁹ | 2⁻¹²⁷ |
+| Largest number | 3.40×10³⁸ | ≈ 2¹²⁸ |
+
+α_G for the proton, 5.906×10⁻³⁹, is within 0.5% of 2⁻¹²⁷, and 1/α_G ≈ 1.7×10³⁸ sits near float32's largest value.
+
+The checks:
+
+1. The exponent depends on the reference particle. With the proton α_G = 5.9×10⁻³⁹ (near 2⁻¹²⁷); with the electron 1.75×10⁻⁴⁵ (near the smallest float32 subnormal, 1.4×10⁻⁴⁵, but 25% off); with the Planck mass exactly 1. Nature does not single out the proton.
+2. Floating-point error is relative, not an absolute floor: about 1 part in 10⁷ for float32 and 1 in 10¹⁶ for double precision, at any magnitude. Float32 continues below 10⁻³⁸ through subnormals to 10⁻⁴⁵, and double precision reaches 10⁻³⁰⁸. A residue would appear as small relative jitter in every quantity, not as one force 10³⁸ times weaker.
+3. The float32 limits are human choices. 2⁻¹²⁶ comes from an 8-bit exponent fixed in 1985; nature would have to share both base 2 and that bit width.
+4. The match is not exact. G is known to about 2 parts in 10⁵, and the 0.5% gap between α_G and 2⁻¹²⁷ is about 200 times larger than that uncertainty.
+
+The idea belongs with Dirac's large-number observations, which note that 10³⁸–10⁴⁰ recurs in physics. It would become testable if it predicted something new, such as a fixed relative graininess in all measurements or 2⁻¹²⁷ in an unrelated ratio. No experiment has shown such graininess so far.
+
 > G is a balance, not a mystery constant: the pull of 1 kg on 1 kg at 1 m, the same in every system from the Moon to Jupiter. The geometry of r₁, r₂ and P shows how two bodies share that balance; only its size still has to be measured.
 
 ## 17. Symbol reference
