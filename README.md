@@ -141,7 +141,7 @@ When the masses meet this limit, P sits where the circle of radius r₁ around M
 
 For Earth and the Sun, r₁ and r₂ cannot share a measuring point. They are two separate scales: r₁ ≈ 259,000 km measured from Earth's centre, and r₂ ≈ 577 AU measured from the Sun's centre.
 
-Interactive tools: [r₁·r₂ Orbit Balance](https://claude.ai/artifact/BXTExkoCanGtak3pTJ9gm2) and [r₁·r₂ Measurement Point](https://claude.ai/artifact/D8hu88NVQGcfFJNm6DXcHc).
+Interactive tools: [r₁·r₂ Orbit Balance](orbit-balance.html) and [r₁·r₂ Measurement Point](measurement-point.html).
 
 ## 7. Splitting G into G₁ and G₂
 
@@ -226,7 +226,7 @@ The two distances also have a direct physical meaning:
 | G = v²·r / M | Orbital speed squared times distance, per unit of mass; with r₁, r₂ it is G = v²·r₁r₂ / (m₂·r) | 29.78 km/s gives 6.67×10⁻¹¹ |
 | G = c²·ℓ\_P / m\_P | Planck length over Planck mass, times c²; in natural units G = 1 | definition |
 
-Interactive tool for Option C: [Equal-Strength Point](https://claude.ai/artifact/4euW5DtKPJ7ZUuU49FyMMV).
+Interactive tool for Option C: [Equal-Strength Point](equal-strength-point.html).
 
 ## 8. What r₁ and r₂ measure, and where G comes back
 
@@ -806,7 +806,7 @@ F = G\cdot\frac{(m_1/1\ \text{kg})\,(m_2/1\ \text{kg})}{(r_1/1\ \text{m})\,(r_2/
 
 The definition fixes what G is. Its number comes from how the units are set (SI defines the metre through c, the second through caesium and the kilogram through Planck's constant) and from one observation of the unit case: T₁ ≈ 8.9 days, or the matching Cavendish twist from section 10.
 
-Interactive tool for this definition: [Definition of G](https://claude.ai/artifact/HQi2EzQETUKYH8BEnWHcCN).
+Interactive tool for this definition: [Definition of G](definition-of-g.html).
 
 ## 16. Symbol reference
 
