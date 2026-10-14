@@ -808,9 +808,32 @@ The definition fixes what G is. Its number comes from how the units are set (SI 
 
 Interactive tool for this definition: [Definition of G](https://shaimaasultan.github.io/Definition-of-G/definition-of-g.html).
 
-## 16. Symbol reference
+## 16. Conclusion
 
-Every symbol used in sections 1–15, with what it means, what it looks like in the geometry, its formula and how it is defined. Earth–Sun values are in brackets. M₁ and M₂ name the bodies; m₁ and m₂ are their masses; M is the total mass.
+Splitting r² into r₁·r₂ keeps Newton's law exact when r is the geometric mean of r₁ and r₂, and following that split all the way through leads to a definition of G: the pull between two 1 kg masses 1 m apart, or equivalently the orbit balance of 1 kg at 1 m, an orbit of about 8.9 days.
+
+### What the work found
+
+| Question | Answer | Sections |
+| --- | --- | --- |
+| When does F′ = G·m₁m₂/(r₁r₂) equal Newton's force? | Only when r₁·r₂ = r², so r = √(r₁·r₂). The orbit fixes the product; any other product changes the orbit. | 1, 4 |
+| How do the masses fix r₁ and r₂? | The mass rule r₁/r₂ = m₁/m₂ gives r₁ = r√(m₁/m₂) and r₂ = r√(m₂/m₁): 259,000 km and 577 AU for Earth–Sun. Each is the distance where one body's pull matches the other's. | 2, 3, 7 |
+| Where are r₁ and r₂ measured from? | From one shared point P on a Cassini oval, but only when 0.382 ≤ m₁/m₂ ≤ 2.618. For Earth and the Sun no shared point exists, so r₁ and r₂ are separate scales around each body. | 6 |
+| Can G be split into G₁ and G₂? | Yes, three ways: a geometric mean, a product, or a ratio of lengths at which both bodies are equally strong at P. | 7, 9 |
+| Are those splits definitions of G? | No. Each form uses Φ, ρ, F or F_max, which already contain G. A non-circular definition needs only lengths, times and masses, as in the Cavendish balance or Kepler's law. | 10 |
+| What balance does G describe? | G = K/M, the fixed ratio of gravitational mass (read from orbit timing) to inertial mass. Through P it is a product of two balance ratios, G = (K/μ)·(r/(r₁ + r₂))², where P shares the orbit balance between the bodies. | 11, 12 |
+| Can G be removed from the force? | From the formula, yes: F = μ·K/(r₁·r₂) uses only masses, the observed orbit and P. From nature, no: K still equals G·M, and kilograms are still needed. | 13 |
+| What is G, then? | The force between two 1 kg masses 1 m apart, 6.674×10⁻¹¹ N; equivalently the orbit balance of 1 kg at 1 m, with period T₁ ≈ 8.9 days. Every real system is a scaled copy of this unit case. | 14, 15 |
+
+### What stays open
+
+The definition fixes what G is, not why it has its value. That value still comes from one observation, such as the unit-orbit period or the Cavendish twist. In unit-free form it is α_G = 5.9×10⁻³⁹, the distance of ordinary matter below the Planck balance point. No current theory explains that number, and why gravity is about 10³⁸ times weaker than the other forces remains the open hierarchy problem.
+
+> G is a balance, not a mystery constant: the pull of 1 kg on 1 kg at 1 m, the same in every system from the Moon to Jupiter. The geometry of r₁, r₂ and P shows how two bodies share that balance; only its size still has to be measured.
+
+## 17. Symbol reference
+
+Every symbol used in sections 1–16, with what it means, what it looks like in the geometry, its formula and how it is defined. Earth–Sun values are in brackets. M₁ and M₂ name the bodies; m₁ and m₂ are their masses; M is the total mass.
 
 ### Bodies and distances
 
