@@ -1,0 +1,293 @@
+<title>Equal-Strength Point</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,500&display=swap">
+<style>
+/* Layout: header + controls, then the log-log "strength" chart beside two to-scale sphere views, then readouts. */
+:root {
+  --bg: #eef1f5;
+  --panel: #ffffff;
+  --ink: #18202c;
+  --muted: #5b6676;
+  --line: #d5dbe4;
+  --sun: #c46a12;
+  --earth: #1f63b0;
+  --level: #7a3fb0;
+  --good: #2b7a4b;
+  --bad: #c7303a;
+  --font-display: "Newsreader", Georgia, serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e131c; --panel: #161d29; --ink: #e4e9f1; --muted: #93a0b3; --line: #2a3445;
+    --sun: #f0a043; --earth: #6aa8f0; --level: #c39af0; --good: #6fcf97; --bad: #f07178;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e131c; --panel: #161d29; --ink: #e4e9f1; --muted: #93a0b3; --line: #2a3445;
+  --sun: #f0a043; --earth: #6aa8f0; --level: #c39af0; --good: #6fcf97; --bad: #f07178;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 40px; display: grid; gap: 20px; }
+header h1 { font-family: var(--font-display); font-weight: 500; font-size: clamp(26px, 4vw, 36px); margin: 0; text-wrap: balance; }
+header p { margin: 6px 0 0; color: var(--muted); max-width: 78ch; }
+.eq { font-family: var(--font-data); font-size: 14px; color: var(--ink); white-space: nowrap; }
+.controls { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.ctl { display: grid; gap: 6px; min-width: 0; }
+.ctl label, .lab { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.ctl output { font-family: var(--font-data); color: var(--ink); text-transform: none; letter-spacing: 0; }
+input[type=range] { width: 100%; accent-color: var(--level); }
+.btns { display: flex; flex-wrap: wrap; gap: 6px; }
+button { font: inherit; font-size: 13px; padding: 6px 11px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--level); }
+button[aria-pressed="true"] { border-color: var(--level); color: var(--level); font-weight: 600; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--level); outline-offset: 2px; }
+.main { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr); gap: 20px; }
+@media (max-width: 900px) { .main { grid-template-columns: 1fr; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 10px; min-width: 0; align-content: start; }
+.panel h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.07em; margin: 0; color: var(--muted); font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sub { margin: 0; font-size: 13px; color: var(--muted); }
+svg { width: 100%; height: auto; display: block; }
+#chart { touch-action: none; cursor: ns-resize; }
+.spheres { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.sphere { display: grid; gap: 4px; min-width: 0; }
+.sphere b { font-size: 13px; }
+.pill { font-family: var(--font-data); font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1px solid currentColor; text-transform: none; letter-spacing: 0; }
+.pill.ok { color: var(--good); } .pill.bad { color: var(--bad); } .pill.mid { color: var(--sun); }
+.table-box { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+td.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.note { font-size: 13px; color: var(--muted); margin: 0; max-width: 85ch; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Equal-Strength Point</h1>
+    <p>Option C writes Newton's law as <span class="eq">F = F_max · (ρ₁/r₁) · (ρ₂/r₂)</span>, with gravitational radius <span class="eq">ρ = G·m/c²</span> and <span class="eq">F_max = c⁴/G</span>. P is where both ratios are equal: each body is equally "strong" there. Drag the purple level on the chart.</p>
+  </header>
+
+  <section class="controls" aria-label="Controls">
+    <div class="ctl">
+      <span class="lab">System (M₁ / M₂)</span>
+      <div class="btns" id="systems"></div>
+    </div>
+    <div class="ctl">
+      <label for="lvl">Strength level ρ/r (log scale) <output id="lvlOut"></output></label>
+      <input type="range" id="lvl" min="-15" max="-7" step="0.01">
+      <div class="btns"><button type="button" id="snap">Snap to equal-strength level</button></div>
+    </div>
+  </section>
+
+  <div class="main">
+    <section class="panel" aria-label="Strength chart">
+      <h2>Strength ρ/d against distance d from each body <span id="pill" class="pill ok">balanced</span></h2>
+      <svg id="chart" viewBox="0 0 620 440" role="img" aria-label="Log-log chart of rho over distance for both bodies with a horizontal strength level"></svg>
+      <p class="sub">Each line is one body's ratio ρ/d. Where a line meets the purple level is that body's P: Earth reaches it at r₁, the Sun at r₂. Solid dots mark each body's surface.</p>
+    </section>
+
+    <section class="panel" aria-label="Spheres to scale">
+      <h2>Where P sits, to scale</h2>
+      <div class="spheres">
+        <div class="sphere"><b id="s1Title">Around M₁</b><svg id="s1" viewBox="0 0 220 220"></svg><span class="sub" id="s1Note"></span></div>
+        <div class="sphere"><b id="s2Title">Around M₂</b><svg id="s2" viewBox="0 0 220 220"></svg><span class="sub" id="s2Note"></span></div>
+      </div>
+      <p class="sub">P can be anywhere on each dashed sphere. Each view is scaled so its sphere fills the frame.</p>
+    </section>
+  </div>
+
+  <section class="panel" aria-label="Readouts">
+    <h2>Readouts</h2>
+    <div class="table-box">
+      <table>
+        <thead><tr><th>Quantity</th><th>M₁</th><th>M₂</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="table-box">
+      <table>
+        <thead><tr><th>Force check</th><th>Value</th></tr></thead>
+        <tbody id="force"></tbody>
+      </table>
+    </div>
+    <p class="note" id="meaning"></p>
+  </section>
+</div>
+
+<script>
+(() => {
+  const G = 6.674e-11, c = 2.998e8, FMAX = c ** 4 / G, AU = 1.496e11;
+  const SYSTEMS = {
+    es: { name: "Earth / Sun", n1: "Earth", n2: "Sun", m1: 5.972e24, m2: 1.989e30, r: 1.496e11, R1: 6.371e6, R2: 6.957e8,
+          ref2: [{ d: 39.5 * AU, label: "Pluto's orbit (39.5 AU)" }, { d: 120 * AU, label: "heliopause (~120 AU)" }],
+          ref1: [{ d: 3.844e8, label: "Moon's orbit" }] },
+    me: { name: "Moon / Earth", n1: "Moon", n2: "Earth", m1: 7.342e22, m2: 5.972e24, r: 3.844e8, R1: 1.737e6, R2: 6.371e6,
+          ref2: [{ d: 3.844e8, label: "Moon's orbit" }, { d: 1.5e9, label: "Earth's Hill sphere (~1.5 million km)" }], ref1: [] },
+    js: { name: "Jupiter / Sun", n1: "Jupiter", n2: "Sun", m1: 1.898e27, m2: 1.989e30, r: 7.785e11, R1: 6.991e7, R2: 6.957e8,
+          ref2: [{ d: 39.5 * AU, label: "Pluto's orbit (39.5 AU)" }], ref1: [{ d: 1.883e9, label: "Callisto's orbit" }] },
+  };
+  const $ = id => document.getElementById(id);
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (parent, t, a) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); parent.appendChild(e); return e; };
+  const sup = { "-": "⁻", "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹" };
+  const pow = e => "10" + String(e).split("").map(ch => sup[ch]).join("");
+  function sci(x, d = 3) {
+    if (!isFinite(x)) return "∞";
+    const e = Math.floor(Math.log10(Math.abs(x)));
+    if (e >= -2 && e <= 3) return x.toLocaleString("en-US", { maximumSignificantDigits: d });
+    return (x / Math.pow(10, e)).toFixed(d - 1) + "×" + pow(e);
+  }
+  function dist(m) {
+    if (m < 1) return sci(m * 1000) + " mm";
+    if (m < 1e4) return sci(m) + " m";
+    if (m < 0.01 * AU) return Math.round(m / 1000).toLocaleString("en-US") + " km";
+    return sci(m / AU) + " AU";
+  }
+
+  let sys = SYSTEMS.es, level;
+  const rho = m => G * m / c ** 2;
+  const star = () => Math.sqrt(rho(sys.m1) * rho(sys.m2)) / sys.r; // equal-strength level sqrt(F/Fmax)
+
+  // system buttons
+  for (const key in SYSTEMS) {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = SYSTEMS[key].name; b.dataset.key = key;
+    b.addEventListener("click", () => { sys = SYSTEMS[key]; level = star(); syncSlider(); render(); });
+    $("systems").appendChild(b);
+  }
+
+  // ---------- chart ----------
+  const svg = $("chart");
+  const W = 620, H = 440, ml = 64, mr = 16, mt = 14, mb = 46;
+  const XMIN = 3, XMAX = 16, YMIN = -21, YMAX = -3;
+  const sx = l => ml + (l - XMIN) / (XMAX - XMIN) * (W - ml - mr);
+  const sy = l => H - mb - (l - YMIN) / (YMAX - YMIN) * (H - mt - mb);
+  const iy = py => YMIN + (H - mb - py) / (H - mt - mb) * (YMAX - YMIN);
+  const clip = el(svg, "clipPath", { id: "cc" }); el(clip, "rect", { x: ml, y: mt, width: W - ml - mr, height: H - mt - mb });
+  for (let l = XMIN; l <= XMAX; l++) {
+    el(svg, "line", { x1: sx(l), x2: sx(l), y1: mt, y2: H - mb, stroke: "var(--line)", "stroke-width": l % 2 ? 0.5 : 1 });
+    if (l % 2 === 1) el(svg, "text", { x: sx(l), y: H - mb + 16, "text-anchor": "middle", "font-size": 11, fill: "var(--muted)", "font-family": "var(--font-data)" }).textContent = pow(l);
+  }
+  for (let l = YMIN + 1; l <= YMAX; l += 2) {
+    el(svg, "line", { y1: sy(l), y2: sy(l), x1: ml, x2: W - mr, stroke: "var(--line)", "stroke-width": 0.7 });
+    el(svg, "text", { x: ml - 6, y: sy(l) + 4, "text-anchor": "end", "font-size": 11, fill: "var(--muted)", "font-family": "var(--font-data)" }).textContent = pow(l);
+  }
+  el(svg, "text", { x: (ml + W - mr) / 2, y: H - 8, "text-anchor": "middle", "font-size": 12, fill: "var(--muted)" }).textContent = "distance d from the body's centre (m)";
+  el(svg, "text", { x: 14, y: (mt + H - mb) / 2, "text-anchor": "middle", "font-size": 12, fill: "var(--muted)", transform: `rotate(-90 14 ${(mt + H - mb) / 2})` }).textContent = "strength ρ/d";
+  const dyn = el(svg, "g", {});
+
+  function renderChart() {
+    dyn.innerHTML = "";
+    const lv = Math.log10(level);
+    // separation r
+    const xr = sx(Math.log10(sys.r));
+    el(dyn, "line", { x1: xr, x2: xr, y1: mt, y2: H - mb, stroke: "var(--muted)", "stroke-dasharray": "3 4" });
+    el(dyn, "text", { x: xr + 4, y: mt + 12, "font-size": 11, fill: "var(--muted)" }).textContent = "r (separation)";
+    const body = (m, R, color, name, rP) => {
+      const lr = Math.log10(rho(m));
+      const inside = el(dyn, "line", { x1: sx(XMIN), y1: sy(lr - XMIN), x2: sx(Math.log10(R)), y2: sy(lr - Math.log10(R)), stroke: color, "stroke-width": 1.5, "stroke-dasharray": "2 4", "clip-path": "url(#cc)" });
+      el(dyn, "line", { x1: sx(Math.log10(R)), y1: sy(lr - Math.log10(R)), x2: sx(XMAX), y2: sy(lr - XMAX), stroke: color, "stroke-width": 2.4, "clip-path": "url(#cc)" });
+      el(dyn, "circle", { cx: sx(Math.log10(R)), cy: sy(lr - Math.log10(R)), r: 4, fill: color });
+      const lx = Math.min(XMAX - 0.3, Math.max(XMIN + 0.3, lr - YMIN - 2.2));
+      el(dyn, "text", { x: sx(Math.max(XMIN + 0.2, Math.log10(R) - 1.5)), y: sy(lr - Math.max(XMIN + 0.2, Math.log10(R) - 1.5)) - 8, "font-size": 12, fill: color, "font-weight": 600 }).textContent = name;
+      // intersection P
+      const lp = Math.log10(rP);
+      if (lp >= XMIN && lp <= XMAX) {
+        el(dyn, "line", { x1: sx(lp), x2: sx(lp), y1: sy(lv), y2: H - mb, stroke: color, "stroke-width": 1, "stroke-dasharray": "4 3" });
+        el(dyn, "circle", { cx: sx(lp), cy: sy(lv), r: 7, fill: "var(--panel)", stroke: color, "stroke-width": 2.5 });
+        el(dyn, "text", { x: sx(lp) + 4, y: H - mb - 6, "font-size": 11, fill: color, "font-family": "var(--font-data)" }).textContent = (color.includes("earth") ? "r₁ = " : "r₂ = ") + dist(rP);
+      }
+    };
+    const r1 = rho(sys.m1) / level, r2 = rho(sys.m2) / level;
+    // level line
+    el(dyn, "rect", { x: ml, y: sy(lv) - 9, width: W - ml - mr, height: 18, fill: "transparent", style: "cursor:ns-resize" });
+    el(dyn, "line", { x1: ml, x2: W - mr, y1: sy(lv), y2: sy(lv), stroke: "var(--level)", "stroke-width": 2 });
+    el(dyn, "text", { x: ml + 6, y: sy(lv) + 16, "text-anchor": "start", "font-size": 11.5, fill: "var(--level)", "font-family": "var(--font-data)" }).textContent = "level ρ/r = " + sci(level);
+    body(sys.m1, sys.R1, "var(--earth)", sys.n1, r1);
+    body(sys.m2, sys.R2, "var(--sun)", sys.n2, r2);
+  }
+  let drag = false;
+  const fromPointer = e => {
+    const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    level = Math.pow(10, Math.min(-7, Math.max(-15, iy(p.y))));
+    syncSlider(); render();
+  };
+  svg.addEventListener("pointerdown", e => { drag = true; svg.setPointerCapture(e.pointerId); fromPointer(e); });
+  svg.addEventListener("pointermove", e => { if (drag) fromPointer(e); });
+  svg.addEventListener("pointerup", () => drag = false);
+  svg.addEventListener("pointercancel", () => drag = false);
+
+  // ---------- sphere views ----------
+  function sphere(svgEl, rP, R, color, refs, name) {
+    svgEl.innerHTML = "";
+    const C = 110, scale = 90 / rP;
+    el(svgEl, "circle", { cx: C, cy: C, r: 90, fill: "none", stroke: color, "stroke-width": 1.8, "stroke-dasharray": "6 5" });
+    const hidden = [];
+    refs.forEach(ref => {
+      const rr = ref.d * scale;
+      if (rr <= 105 && rr >= 1.5) {
+        el(svgEl, "circle", { cx: C, cy: C, r: rr, fill: "none", stroke: "var(--muted)", "stroke-width": 1, "stroke-dasharray": "2 3" });
+        el(svgEl, "text", { x: C, y: C - rr - 3, "text-anchor": "middle", "font-size": 9.5, fill: "var(--muted)" }).textContent = ref.label;
+      } else hidden.push(ref.label + (rr > 105 ? " is outside" : " is too small to see"));
+    });
+    const br = Math.max(3, R * scale);
+    el(svgEl, "circle", { cx: C, cy: C, r: Math.min(br, 88), fill: color, opacity: 0.9 });
+    // P on the sphere
+    const a = -Math.PI / 4, px = C + 90 * Math.cos(a), py = C + 90 * Math.sin(a);
+    el(svgEl, "line", { x1: C, y1: C, x2: px, y2: py, stroke: "var(--bad)", "stroke-width": 2 });
+    el(svgEl, "circle", { cx: px, cy: py, r: 6, fill: "var(--panel)", stroke: "var(--bad)", "stroke-width": 2.2 });
+    el(svgEl, "text", { x: px + 8, y: py - 4, "font-size": 12, fill: "var(--bad)", "font-weight": 600 }).textContent = "P";
+    return { hidden, bodyTrue: R * scale };
+  }
+
+  function syncSlider() { $("lvl").value = Math.log10(level).toFixed(2); }
+
+  function render() {
+    document.querySelectorAll("#systems button").forEach(b => b.setAttribute("aria-pressed", SYSTEMS[b.dataset.key] === sys));
+    const L0 = star(), r1 = rho(sys.m1) / level, r2 = rho(sys.m2) / level;
+    const eps = (r1 * r2) / (sys.r * sys.r), Fn = G * sys.m1 * sys.m2 / sys.r ** 2, Fp = FMAX * level * level;
+    $("lvlOut").textContent = sci(level) + (Math.abs(level / L0 - 1) < 0.01 ? " (equal-strength)" : "");
+    const pill = $("pill");
+    if (Math.abs(eps - 1) < 0.02) { pill.className = "pill ok"; pill.textContent = "balanced: F = Newton"; }
+    else if (eps < 1) { pill.className = "pill bad"; pill.textContent = `force ${(Fp / Fn).toFixed(2)}× too strong`; }
+    else { pill.className = "pill mid"; pill.textContent = `force ${(Fp / Fn).toFixed(2)}× too weak`; }
+    renderChart();
+
+    $("s1Title").textContent = `Around ${sys.n1}: sphere r₁ = ${dist(r1)}`;
+    $("s2Title").textContent = `Around ${sys.n2}: sphere r₂ = ${dist(r2)}`;
+    const a = sphere($("s1"), r1, sys.R1, "var(--earth)", sys.ref1, sys.n1);
+    const b = sphere($("s2"), r2, sys.R2, "var(--sun)", sys.ref2, sys.n2);
+    const bodyNote = (s, n) => s.bodyTrue < 3 ? `${n} is drawn enlarged; at this scale it would be ${s.bodyTrue < 0.01 ? "far below" : sci(s.bodyTrue)} a pixel.` : (s.bodyTrue > 88 ? `${n} is bigger than this sphere: P is inside the body.` : "");
+    $("s1Note").textContent = [bodyNote(a, sys.n1), ...a.hidden].filter(Boolean).join(" ");
+    $("s2Note").textContent = [bodyNote(b, sys.n2), `The separation r = ${dist(sys.r)} is ${sci(sys.r * 90 / r2)} px here.`, ...b.hidden].filter(Boolean).join(" ");
+
+    const rows = [
+      ["Mass m", sci(sys.m1) + " kg", sci(sys.m2) + " kg"],
+      ["Gravitational radius ρ = G·m/c²", dist(rho(sys.m1)), dist(rho(sys.m2))],
+      ["Distance to P", "r₁ = " + sci(r1) + " m", "r₂ = " + sci(r2) + " m"],
+      ["Strength ρ/r at P", sci(rho(sys.m1) / r1), sci(rho(sys.m2) / r2)],
+      ["Pull at P, G·m/d²", sci(G * sys.m1 / r1 ** 2) + " m/s²", sci(G * sys.m2 / r2 ** 2) + " m/s²"],
+      ["Body radius", dist(sys.R1), dist(sys.R2)],
+    ];
+    $("rows").innerHTML = rows.map(r => `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td></tr>`).join("");
+    const f = [
+      ["F_max = c⁴/G", sci(FMAX) + " N"],
+      ["Equal-strength level √(F/F_max)", sci(L0)],
+      ["F′ = F_max · (ρ₁/r₁)(ρ₂/r₂)", sci(Fp) + " N"],
+      ["Newton F = G·m₁m₂/r²", sci(Fn) + " N"],
+      ["r₁·r₂ / r²", eps.toFixed(3)],
+    ];
+    $("force").innerHTML = f.map(r => `<tr><td>${r[0]}</td><td class="num">${r[1]}</td></tr>`).join("");
+    $("meaning").textContent = `At the equal-strength level, r₁ = r√(m₁/m₂) = ${dist(rho(sys.m1) / L0)} is where ${sys.n1}'s pull equals ${sys.n2}'s pull at ${sys.n1} (${sci(G * sys.m2 / sys.r ** 2)} m/s²), and r₂ = r√(m₂/m₁) = ${dist(rho(sys.m2) / L0)} is where ${sys.n2}'s pull falls to ${sys.n1}'s pull at distance r (${sci(G * sys.m1 / sys.r ** 2)} m/s²). Since ρ/d = (G·m/d)/c², equal strength also means equal depth of each body's gravitational potential at its own P.`;
+  }
+
+  $("lvl").addEventListener("input", () => { level = Math.pow(10, +$("lvl").value); render(); });
+  $("snap").addEventListener("click", () => { level = star(); syncSlider(); render(); });
+  level = star(); syncSlider(); render();
+})();
+</script>

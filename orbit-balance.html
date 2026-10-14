@@ -1,0 +1,355 @@
+<title>r₁·r₂ Orbit Balance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,500&display=swap">
+<style>
+/* Layout: header + control strip, then two instrument panels (curve | orbit) side by side, stacking on phones; readout table under them. */
+:root {
+  --bg: #eef1f5;
+  --panel: #ffffff;
+  --ink: #18202c;
+  --muted: #5b6676;
+  --line: #d5dbe4;
+  --sun: #c46a12;
+  --earth: #1f63b0;
+  --bad: #b8323a;
+  --good: #2b7a4b;
+  --shade: rgba(31, 99, 176, 0.06);
+  --font-display: "Newsreader", Georgia, serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e131c; --panel: #161d29; --ink: #e4e9f1; --muted: #93a0b3; --line: #2a3445;
+    --sun: #f0a043; --earth: #6aa8f0; --bad: #f07178; --good: #6fcf97; --shade: rgba(106, 168, 240, 0.08);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e131c; --panel: #161d29; --ink: #e4e9f1; --muted: #93a0b3; --line: #2a3445;
+  --sun: #f0a043; --earth: #6aa8f0; --bad: #f07178; --good: #6fcf97; --shade: rgba(106, 168, 240, 0.08);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 40px; display: grid; gap: 20px; }
+header h1 { font-family: var(--font-display); font-weight: 500; font-size: clamp(26px, 4vw, 36px); margin: 0; text-wrap: balance; }
+header p { margin: 6px 0 0; color: var(--muted); max-width: 70ch; }
+.eq { font-family: var(--font-data); font-size: 14px; color: var(--ink); white-space: nowrap; }
+.controls { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.ctl { display: grid; gap: 4px; min-width: 0; }
+.ctl label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.ctl output { font-family: var(--font-data); color: var(--ink); text-transform: none; letter-spacing: 0; }
+input[type=range] { width: 100%; accent-color: var(--earth); }
+.presets { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+button { font: inherit; font-size: 13px; padding: 7px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--earth); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--earth); outline-offset: 2px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 10px; min-width: 0; align-content: start; }
+.panel h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.07em; margin: 0; color: var(--muted); font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.panel .sub { margin: 0; font-size: 13px; color: var(--muted); }
+svg#curve { width: 100%; height: auto; display: block; touch-action: none; cursor: crosshair; }
+.canvas-box { position: relative; width: 100%; aspect-ratio: 1 / 1; max-width: 100%; }
+canvas { width: 100%; height: 100%; display: block; border-radius: 6px; }
+.pill { font-family: var(--font-data); font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1px solid currentColor; text-transform: none; letter-spacing: 0; }
+.pill.ok { color: var(--good); } .pill.strong { color: var(--bad); } .pill.weak { color: var(--sun); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.table-box { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+td.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.note { font-size: 13px; color: var(--muted); margin: 0; max-width: 80ch; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>r₁·r₂ Orbit Balance</h1>
+    <p>Newton's law with r² split into two distances: <span class="eq">F′ = G·m₁·m₂ / (r₁·r₂)</span>. Earth (M₁) keeps its real orbit only when <span class="eq">r₁·r₂ = r²</span>. Drag on the curve or move the sliders.</p>
+  </header>
+
+  <section class="controls" aria-label="Controls">
+    <div class="ctl">
+      <label for="r1">r₁ (log scale) <output id="r1Out"></output></label>
+      <input type="range" id="r1" min="5" max="17" step="0.01">
+    </div>
+    <div class="ctl">
+      <label for="eps">ε = r₁·r₂ / r² <output id="epsOut"></output></label>
+      <input type="range" id="eps" min="0.3" max="2.5" step="0.01" value="1">
+    </div>
+    <div class="presets">
+      <button id="pMass" type="button">Mass-weighted balance</button>
+      <button id="pEqual" type="button">Equal split r₁ = r₂ = r</button>
+      <button id="pStrong" type="button">ε = 0.7</button>
+      <button id="pWeak" type="button">ε = 1.4</button>
+      <button id="pEsc" type="button">ε = 2.1</button>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="panel" aria-label="r1 r2 curve">
+      <h2>r₁ – r₂ plane <span id="curvePill" class="pill ok">balanced</span></h2>
+      <svg id="curve" viewBox="0 0 520 440" role="img" aria-label="Log-log plot of r2 against r1 with the balance line r1 r2 = r squared"></svg>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--good)"></i>Mass-weighted balance</span>
+        <span><i class="sw" style="background:var(--muted)"></i>Equal split</span>
+        <span><i class="sw" style="background:var(--bad)"></i>Barycenter split (fails)</span>
+        <span><i class="sw" style="background:var(--earth)"></i>Your point</span>
+      </div>
+    </section>
+
+    <section class="panel" aria-label="Orbit simulation">
+      <h2>Earth's path <span><button id="play" type="button">Pause</button> <button id="restart" type="button">Restart</button></span></h2>
+      <p class="sub">Earth starts at 1 AU with its real speed, 29.78 km/s. Dashed circle: the real orbit. Faint curve: predicted path.</p>
+      <div class="canvas-box"><canvas id="orbit" aria-label="Animated orbit of Earth around the Sun"></canvas></div>
+      <p class="sub" id="simTime"></p>
+    </section>
+  </div>
+
+  <section class="panel" aria-label="Readouts">
+    <h2>Readouts</h2>
+    <div class="table-box">
+      <table>
+        <thead><tr><th>Quantity</th><th>Your point</th><th>Balanced (ε = 1)</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="note">The simulation keeps ε fixed as Earth moves, so the force is F′ = F/ε at every distance. From a tangential start at 1 AU this gives an exact ellipse with eccentricity e = |ε − 1|, semi-major axis a = 1/(2 − ε) AU, and escape when ε ≥ 2. The barycenter split (r₁ ≈ 1 AU, r₂ ≈ 449 km) has ε ≈ 3×10⁻⁶: the force is about 333,000 times too strong, far outside the slider.</p>
+  </section>
+</div>
+
+<script>
+(() => {
+  const G = 6.674e-11, m1 = 5.972e24, m2 = 1.989e30, R = 1.496e11, AU = 1.496e11;
+  const k = Math.sqrt(m1 / m2);
+  const F0 = G * m1 * m2 / (R * R);
+  const v0 = Math.sqrt(G * m2 / R);
+  const bal = { r1: R * k, r2: R / k };
+  const bary = { r1: R * m2 / (m1 + m2), r2: R * m1 / (m1 + m2) };
+  const LMIN = 5, LMAX = 17;
+
+  const $ = id => document.getElementById(id);
+  const r1In = $("r1"), epsIn = $("eps");
+  const state = { r1: bal.r1, eps: 1 };
+  r1In.value = Math.log10(bal.r1).toFixed(2);
+
+  const sup = { "-": "⁻", "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹" };
+  function sci(x, d = 3) {
+    if (!isFinite(x)) return "∞";
+    if (x === 0) return "0";
+    const e = Math.floor(Math.log10(Math.abs(x)));
+    if (e >= -2 && e <= 4) return x.toLocaleString("en-US", { maximumSignificantDigits: d + 1 });
+    const m = x / Math.pow(10, e);
+    return m.toFixed(d - 1) + "×10" + String(e).split("").map(c => sup[c]).join("");
+  }
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  // ---------- r1–r2 curve (SVG, log-log) ----------
+  const svg = $("curve"), NS = "http://www.w3.org/2000/svg";
+  const W = 520, H = 440, ml = 62, mr = 14, mt = 14, mb = 50;
+  const sx = l => ml + (l - LMIN) / (LMAX - LMIN) * (W - ml - mr);
+  const sy = l => H - mb - (l - LMIN) / (LMAX - LMIN) * (H - mt - mb);
+  const ix = px => LMIN + (px - ml) / (W - ml - mr) * (LMAX - LMIN);
+  const iy = py => LMIN + (H - mb - py) / (H - mt - mb) * (LMAX - LMIN);
+  const el = (t, a, parent = svg) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); parent.appendChild(e); return e; };
+
+  // static frame
+  const clip = el("clipPath", { id: "plotclip" }); el("rect", { x: ml, y: mt, width: W - ml - mr, height: H - mt - mb }, clip);
+  const shadeBelow = el("polygon", { fill: "var(--shade)", "clip-path": "url(#plotclip)" });
+  for (let l = LMIN; l <= LMAX; l++) {
+    el("line", { x1: sx(l), x2: sx(l), y1: mt, y2: H - mb, stroke: "var(--line)", "stroke-width": l % 2 ? 0.5 : 1 });
+    el("line", { y1: sy(l), y2: sy(l), x1: ml, x2: W - mr, stroke: "var(--line)", "stroke-width": l % 2 ? 0.5 : 1 });
+    if (l % 2 === 1) {
+      el("text", { x: sx(l), y: H - mb + 16, "text-anchor": "middle", "font-size": 11, fill: "var(--muted)", "font-family": "var(--font-data)" }).textContent = "10" + String(l).split("").map(c => sup[c]).join("");
+      el("text", { x: ml - 6, y: sy(l) + 4, "text-anchor": "end", "font-size": 11, fill: "var(--muted)", "font-family": "var(--font-data)" }).textContent = "10" + String(l).split("").map(c => sup[c]).join("");
+    }
+  }
+  el("text", { x: (ml + W - mr) / 2, y: H - 10, "text-anchor": "middle", "font-size": 12, fill: "var(--muted)" }).textContent = "r₁ (m)";
+  el("text", { x: 14, y: (mt + H - mb) / 2, "text-anchor": "middle", "font-size": 12, fill: "var(--muted)", transform: `rotate(-90 14 ${(mt + H - mb) / 2})` }).textContent = "r₂ (m)";
+  el("text", { x: sx(6), y: sy(6.6), "font-size": 11, fill: "var(--bad)" }).textContent = "r₁r₂ < r²: force too strong";
+  el("text", { x: sx(16.8), y: sy(16.3), "text-anchor": "end", "font-size": 11, fill: "var(--sun)" }).textContent = "r₁r₂ > r²: too weak";
+
+  const L2 = Math.log10(R * R);
+  const lineFor = (logP, attrs) => el("line", Object.assign({ x1: sx(logP - LMAX), y1: sy(LMAX), x2: sx(LMAX), y2: sy(logP - LMAX), "clip-path": "url(#plotclip)" }, attrs));
+  // balance line r1 r2 = r^2 runs from (L2-17, 17) to (17, L2-17)
+  const balLine = el("line", { x1: sx(L2 - LMAX), y1: sy(LMAX), x2: sx(LMAX), y2: sy(L2 - LMAX), stroke: "var(--good)", "stroke-width": 2.2, "clip-path": "url(#plotclip)" });
+  el("text", { x: sx(14.6) + 6, y: sy(L2 - 14.6) - 8, "font-size": 11, fill: "var(--good)", "font-weight": 600 }).textContent = "r₁·r₂ = r²";
+  shadeBelow.setAttribute("points", [[sx(LMIN), sy(LMIN)], [sx(LMIN), sy(LMAX)], [sx(L2 - LMAX), sy(LMAX)], [sx(LMAX), sy(L2 - LMAX)], [sx(LMAX), sy(LMIN)]].map(p => p.join(",")).join(" "));
+  const curLine = el("line", { stroke: "var(--earth)", "stroke-width": 1.4, "stroke-dasharray": "5 4", "clip-path": "url(#plotclip)" });
+
+  function dot(r1, r2, color, label, dx = 8, dy = -8, anchor = "start") {
+    const x = sx(Math.log10(r1)), y = sy(Math.log10(r2));
+    el("circle", { cx: x, cy: y, r: 5.5, fill: color, stroke: "var(--panel)", "stroke-width": 1.5 });
+    el("text", { x: x + dx, y: y + dy, "font-size": 11, fill: color, "text-anchor": anchor, "font-family": "var(--font-data)" }).textContent = label;
+  }
+  dot(bal.r1, bal.r2, "var(--good)", "r₁=2.59×10⁸, r₂=8.63×10¹³", 9, -6);
+  dot(R, R, "var(--muted)", "r₁=r₂=1 AU", 9, -6);
+  dot(bary.r1, bary.r2, "var(--bad)", "barycenter: ε≈3×10⁻⁶", 9, 14);
+
+  const cur = el("circle", { r: 8, fill: "none", stroke: "var(--earth)", "stroke-width": 2.5 });
+  const curC = el("circle", { r: 2.5, fill: "var(--earth)" });
+
+  function setFromPointer(ev) {
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    const lx = Math.min(LMAX, Math.max(LMIN, ix(p.x)));
+    const ly = Math.min(LMAX, Math.max(LMIN, iy(p.y)));
+    state.r1 = Math.pow(10, lx);
+    state.eps = Math.min(2.5, Math.max(0.3, Math.pow(10, lx + ly - L2)));
+    r1In.value = lx.toFixed(2); epsIn.value = state.eps.toFixed(2);
+    update(true);
+  }
+  let dragging = false;
+  svg.addEventListener("pointerdown", e => { dragging = true; svg.setPointerCapture(e.pointerId); setFromPointer(e); });
+  svg.addEventListener("pointermove", e => { if (dragging) setFromPointer(e); });
+  svg.addEventListener("pointerup", () => dragging = false);
+  svg.addEventListener("pointercancel", () => dragging = false);
+
+  // ---------- Orbit simulation (AU, years) ----------
+  const cv = $("orbit"), ctx = cv.getContext("2d");
+  const GM = 4 * Math.PI * Math.PI;
+  let sim, running = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  $("play").textContent = running ? "Pause" : "Play";
+
+  function orbitInfo(eps) {
+    const e = Math.abs(eps - 1);
+    if (eps >= 2) return { e, bound: false };
+    const a = 1 / (2 - eps);
+    const peri = Math.min(1, eps / (2 - eps)), aph = Math.max(1, eps / (2 - eps));
+    const T = Math.sqrt(a * a * a * eps); // years, since GM' = GM/eps
+    return { e, a, peri, aph, T, bound: true };
+  }
+  function resetSim() {
+    const info = orbitInfo(state.eps);
+    const view = info.bound ? Math.min(8, Math.max(1.25, info.aph * 1.12)) : 4;
+    sim = { x: 1, y: 0, vx: 0, vy: 2 * Math.PI, t: 0, trail: [[1, 0]], view, gm: GM / state.eps, gone: false };
+  }
+  function step(dt) {
+    const s = sim;
+    const acc = (x, y) => { const r = Math.hypot(x, y), f = -s.gm / (r * r * r); return [f * x, f * y]; };
+    let [ax, ay] = acc(s.x, s.y);
+    s.vx += ax * dt / 2; s.vy += ay * dt / 2;
+    s.x += s.vx * dt; s.y += s.vy * dt;
+    [ax, ay] = acc(s.x, s.y);
+    s.vx += ax * dt / 2; s.vy += ay * dt / 2;
+    s.t += dt;
+  }
+  function size() {
+    const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    cv.width = Math.max(1, Math.round(r.width * d)); cv.height = Math.max(1, Math.round(r.height * d));
+  }
+  new ResizeObserver(() => { size(); draw(); }).observe(cv);
+
+  function draw() {
+    const w = cv.width, h = cv.height, c = Math.min(w, h) / 2, d = window.devicePixelRatio || 1;
+    const s = c / sim.view * 0.95;
+    const P = (x, y) => [w / 2 + x * s, h / 2 - y * s];
+    ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, w, h);
+    // AU rings
+    ctx.strokeStyle = css("--line"); ctx.lineWidth = 1 * d;
+    for (let r = 1; r <= sim.view; r++) { ctx.beginPath(); ctx.arc(w / 2, h / 2, r * s, 0, 2 * Math.PI); ctx.stroke(); }
+    ctx.fillStyle = css("--muted"); ctx.font = `${11 * d}px ${css("--font-data") || "monospace"}`;
+    ctx.fillText(`grid: 1 AU rings · view ±${sim.view.toFixed(1)} AU`, 10 * d, h - 10 * d);
+    // real orbit (balanced) dashed
+    ctx.setLineDash([6 * d, 5 * d]); ctx.strokeStyle = css("--good"); ctx.lineWidth = 1.5 * d;
+    ctx.beginPath(); ctx.arc(w / 2, h / 2, s, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+    // predicted path
+    const info = orbitInfo(state.eps);
+    ctx.strokeStyle = css("--earth"); ctx.globalAlpha = 0.28; ctx.lineWidth = 1.5 * d; ctx.beginPath();
+    const p = info.bound ? info.a * (1 - info.e * info.e) : 2 * state.eps; // semi-latus rectum = h^2/GM' = eps (in AU)
+    const sign = state.eps >= 1 ? 1 : -1; // perihelion on +x when eps > 1
+    let first = true;
+    for (let i = 0; i <= 720; i++) {
+      const th = -Math.PI + i * 2 * Math.PI / 720;
+      const den = 1 + sign * info.e * Math.cos(th);
+      if (den <= 0.02) { first = true; continue; }
+      const r = state.eps / den;
+      if (r > sim.view * 3) { first = true; continue; }
+      const [X, Y] = P(r * Math.cos(th), r * Math.sin(th));
+      first ? ctx.moveTo(X, Y) : ctx.lineTo(X, Y); first = false;
+    }
+    ctx.stroke(); ctx.globalAlpha = 1;
+    // trail
+    ctx.strokeStyle = css("--earth"); ctx.lineWidth = 2 * d; ctx.beginPath();
+    sim.trail.forEach(([x, y], i) => { const [X, Y] = P(x, y); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); });
+    ctx.stroke();
+    // sun
+    const [sX, sY] = P(0, 0);
+    ctx.fillStyle = css("--sun"); ctx.beginPath(); ctx.arc(sX, sY, 9 * d, 0, 2 * Math.PI); ctx.fill();
+    // earth
+    const [eX, eY] = P(sim.x, sim.y);
+    ctx.fillStyle = css("--earth"); ctx.beginPath(); ctx.arc(eX, eY, 5.5 * d, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = css("--panel"); ctx.lineWidth = 1.5 * d; ctx.stroke();
+    $("simTime").textContent = sim.gone ? `Earth left the view after ${sim.t.toFixed(2)} years: it escapes.` : `Simulated time: ${sim.t.toFixed(2)} years · distance from Sun: ${Math.hypot(sim.x, sim.y).toFixed(3)} AU`;
+  }
+
+  let last = 0;
+  function tick(ts) {
+    const dtReal = Math.min(0.05, (ts - (last || ts)) / 1000); last = ts;
+    if (running && !sim.gone) {
+      const simDt = dtReal * 0.3; // 0.3 years per second
+      const n = Math.max(1, Math.ceil(simDt / 4e-5));
+      for (let i = 0; i < n; i++) step(simDt / n);
+      sim.trail.push([sim.x, sim.y]);
+      if (sim.trail.length > 6000) sim.trail.shift();
+      if (Math.hypot(sim.x, sim.y) > sim.view * 1.6) sim.gone = true;
+    }
+    draw();
+    requestAnimationFrame(tick);
+  }
+
+  $("play").addEventListener("click", () => { running = !running; $("play").textContent = running ? "Pause" : "Play"; });
+  $("restart").addEventListener("click", () => { resetSim(); });
+
+  // ---------- Readouts ----------
+  function update(restart) {
+    const r1 = state.r1, eps = state.eps, r2 = eps * R * R / r1;
+    $("r1Out").textContent = sci(r1) + " m";
+    $("epsOut").textContent = eps.toFixed(2);
+    const x = sx(Math.log10(r1)), ly2 = Math.log10(r2);
+    const y = sy(Math.min(LMAX + 0.3, Math.max(LMIN - 0.3, ly2)));
+    cur.setAttribute("cx", x); cur.setAttribute("cy", y); curC.setAttribute("cx", x); curC.setAttribute("cy", y);
+    const LP = Math.log10(eps * R * R);
+    curLine.setAttribute("x1", sx(LP - LMAX)); curLine.setAttribute("y1", sy(LMAX));
+    curLine.setAttribute("x2", sx(LMAX)); curLine.setAttribute("y2", sy(LP - LMAX));
+    curLine.style.display = Math.abs(eps - 1) < 0.005 ? "none" : "";
+
+    const pill = $("curvePill");
+    if (Math.abs(eps - 1) < 0.005) { pill.className = "pill ok"; pill.textContent = "balanced"; }
+    else if (eps < 1) { pill.className = "pill strong"; pill.textContent = `force ${(1 / eps).toFixed(2)}× too strong`; }
+    else { pill.className = "pill weak"; pill.textContent = eps >= 2 ? "too weak: escapes" : `force ${(1 / eps).toFixed(2)}× too weak`; }
+
+    const info = orbitInfo(eps), base = orbitInfo(1);
+    const Fp = F0 / eps;
+    const rows = [
+      ["r₁", sci(r1) + " m", sci(bal.r1) + " m"],
+      ["r₂", sci(r2) + " m", sci(bal.r2) + " m"],
+      ["r₁·r₂ / r²", eps.toFixed(3), "1.000"],
+      ["r₁ / r₂  (vs m₁/m₂ = " + sci(m1 / m2) + ")", sci(r1 / r2), sci(bal.r1 / bal.r2)],
+      ["Force F′", sci(Fp) + " N", sci(F0) + " N"],
+      ["Speed needed for a circle at 1 AU", (v0 / Math.sqrt(eps) / 1000).toFixed(2) + " km/s", (v0 / 1000).toFixed(2) + " km/s"],
+      ["Eccentricity e", info.e.toFixed(3), "0.000"],
+      ["Closest distance to Sun", info.bound ? info.peri.toFixed(3) + " AU" : "1.000 AU", "1.000 AU"],
+      ["Farthest distance", info.bound ? info.aph.toFixed(3) + " AU" : "∞ (escapes)", "1.000 AU"],
+      ["Orbital period", info.bound ? info.T.toFixed(3) + " yr" : "none", base.T.toFixed(3) + " yr"],
+    ];
+    $("rows").innerHTML = rows.map(r => `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td></tr>`).join("");
+    if (restart) resetSim();
+  }
+
+  r1In.addEventListener("input", () => { state.r1 = Math.pow(10, +r1In.value); update(false); });
+  epsIn.addEventListener("input", () => { state.eps = +epsIn.value; update(true); });
+  const preset = (r1, eps) => { state.r1 = r1; state.eps = eps; r1In.value = Math.log10(r1).toFixed(2); epsIn.value = eps; update(true); };
+  $("pMass").addEventListener("click", () => preset(bal.r1, 1));
+  $("pEqual").addEventListener("click", () => preset(R, 1));
+  $("pStrong").addEventListener("click", () => preset(bal.r1, 0.7));
+  $("pWeak").addEventListener("click", () => preset(bal.r1, 1.4));
+  $("pEsc").addEventListener("click", () => preset(bal.r1, 2.1));
+
+  resetSim(); update(false); size(); draw();
+  requestAnimationFrame(tick);
+})();
+</script>

@@ -1,0 +1,280 @@
+<title>r₁·r₂ Measurement Point</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,500&display=swap">
+<style>
+/* Layout: header, control strip, then the geometry plane (wide) beside an answer column; stacks on phones. */
+:root {
+  --bg: #eef1f5;
+  --panel: #ffffff;
+  --ink: #18202c;
+  --muted: #5b6676;
+  --line: #d5dbe4;
+  --sun: #c46a12;
+  --earth: #1f63b0;
+  --red: #c7303a;
+  --good: #2b7a4b;
+  --oval: rgba(43, 122, 75, 0.08);
+  --font-display: "Newsreader", Georgia, serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e131c; --panel: #161d29; --ink: #e4e9f1; --muted: #93a0b3; --line: #2a3445;
+    --sun: #f0a043; --earth: #6aa8f0; --red: #f07178; --good: #6fcf97; --oval: rgba(111, 207, 151, 0.08);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e131c; --panel: #161d29; --ink: #e4e9f1; --muted: #93a0b3; --line: #2a3445;
+  --sun: #f0a043; --earth: #6aa8f0; --red: #f07178; --good: #6fcf97; --oval: rgba(111, 207, 151, 0.08);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 40px; display: grid; gap: 20px; }
+header h1 { font-family: var(--font-display); font-weight: 500; font-size: clamp(26px, 4vw, 36px); margin: 0; text-wrap: balance; }
+header p { margin: 6px 0 0; color: var(--muted); max-width: 75ch; }
+.eq { font-family: var(--font-data); font-size: 14px; color: var(--ink); white-space: nowrap; }
+.controls { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.ctl { display: grid; gap: 6px; min-width: 0; }
+.ctl label, .lab { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.ctl output { font-family: var(--font-data); color: var(--ink); text-transform: none; letter-spacing: 0; }
+input[type=range] { width: 100%; accent-color: var(--earth); }
+.btns { display: flex; flex-wrap: wrap; gap: 6px; }
+button { font: inherit; font-size: 13px; padding: 6px 11px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--earth); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--earth); outline-offset: 2px; }
+.main { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr); gap: 20px; }
+@media (max-width: 860px) { .main { grid-template-columns: 1fr; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 10px; min-width: 0; align-content: start; }
+.panel h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.07em; margin: 0; color: var(--muted); font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+svg#plane { width: 100%; height: auto; display: block; touch-action: none; cursor: crosshair; }
+.pill { font-family: var(--font-data); font-size: 12px; padding: 3px 9px; border-radius: 999px; border: 1px solid currentColor; text-transform: none; letter-spacing: 0; }
+.pill.ok { color: var(--good); } .pill.bad { color: var(--red); } .pill.mid { color: var(--sun); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 14px; height: 0; border-top: 2px solid; display: inline-block; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+td { padding: 6px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.answer h3 { font-family: var(--font-display); font-weight: 500; font-size: 20px; margin: 0; }
+.answer p { margin: 0; font-size: 14px; }
+.answer ol { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 14px; }
+.verdict { border-left: 3px solid var(--good); padding: 8px 12px; background: var(--bg); border-radius: 0 6px 6px 0; font-size: 14px; }
+.verdict.bad { border-left-color: var(--red); }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>r₁·r₂ Measurement Point</h1>
+    <p>Where are r₁ and r₂ measured from? Like your sketch, both lines run to one shared point P: <span class="eq">r₁ = |M₁P|</span>, <span class="eq">r₂ = |M₂P|</span>. For the force to stay Newton's, P must satisfy <span class="eq">r₁·r₂ = r²</span>. Drag P on the plane.</p>
+  </header>
+
+  <section class="controls" aria-label="Controls">
+    <div class="ctl">
+      <label for="q">Mass ratio m₁/m₂ (log scale) <output id="qOut"></output></label>
+      <input type="range" id="q" min="-6" max="0" step="0.01">
+      <div class="btns">
+        <button type="button" data-q="3.003e-6">Earth / Sun</button>
+        <button type="button" data-q="9.546e-4">Jupiter / Sun</button>
+        <button type="button" data-q="0.0123">Moon / Earth</button>
+        <button type="button" data-q="0.122">Charon / Pluto</button>
+        <button type="button" data-q="0.6">Binary star 0.6</button>
+        <button type="button" data-q="1">Equal masses</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lab">Move P to</span>
+      <div class="btns">
+        <button type="button" id="sMass">Mass-rule point</button>
+        <button type="button" id="sApex">Equal split (apex)</button>
+        <button type="button" id="sG1">Golden point beyond M₁</button>
+        <button type="button" id="sG2">Golden point beyond M₂</button>
+        <button type="button" id="sBary">Barycenter</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="main">
+    <section class="panel" aria-label="Geometry plane">
+      <h2>Plane of M₁ and M₂ (unit: r = M₁M₂ distance) <span id="pill" class="pill ok">on the oval</span></h2>
+      <svg id="plane" viewBox="0 0 720 520" role="img" aria-label="Earth and Sun with the Cassini oval of points where r1 times r2 equals r squared"></svg>
+      <div class="legend">
+        <span><i class="sw" style="border-color:var(--good)"></i>Cassini oval: every P with r₁·r₂ = r²</span>
+        <span><i class="sw" style="border-color:var(--earth);border-top-style:dashed"></i>Circle of radius r₁ needed by the mass rule</span>
+        <span><i class="sw" style="border-color:var(--sun);border-top-style:dashed"></i>Circle of radius r₂ needed by the mass rule</span>
+        <span><i class="sw" style="border-color:var(--red)"></i>r₁, r₂ to your P</span>
+      </div>
+    </section>
+
+    <aside class="panel answer" aria-label="Answer">
+      <h3>The measuring point</h3>
+      <div id="verdict" class="verdict"></div>
+      <table><tbody id="rows"></tbody></table>
+      <ol>
+        <li><b>Any shared point P</b> must sit on the green Cassini oval. It wraps around both bodies.</li>
+        <li><b>Equal split</b> (r₁ = r₂ = r): P is the apex of an equilateral triangle on M₁M₂.</li>
+        <li><b>On the line</b> the oval crosses at the golden ratio: r₁ = 0.618 r and r₂ = 1.618 r, or the reverse.</li>
+        <li><b>Mass rule</b> r₁/r₂ = m₁/m₂ needs r₁ = r√(m₁/m₂) and r₂ = r√(m₂/m₁). Those two circles meet only when 0.382 ≤ m₁/m₂ ≤ 2.618.</li>
+      </ol>
+    </aside>
+  </div>
+</div>
+
+<script>
+(() => {
+  const AU = 1.496e11, PHI = (1 + Math.sqrt(5)) / 2;
+  const QMIN = 1 / (PHI * PHI);
+  const $ = id => document.getElementById(id);
+  const svg = $("plane"), NS = "http://www.w3.org/2000/svg";
+  const W = 720, H = 520, S = 190, OX = 1.25 * S + 10, OY = H / 2;
+  const X = x => OX + x * S, Y = y => OY - y * S;
+  const ux = px => (px - OX) / S, uy = py => (OY - py) / S;
+  const el = (t, a, parent = svg) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); parent.appendChild(e); return e; };
+  const sup = { "-": "⁻", "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹" };
+  function sci(x, d = 3) {
+    if (!isFinite(x)) return "∞";
+    const e = Math.floor(Math.log10(Math.abs(x)));
+    if (e >= -2 && e <= 3) return x.toLocaleString("en-US", { maximumSignificantDigits: d });
+    return (x / Math.pow(10, e)).toFixed(d - 1) + "×10" + String(e).split("").map(c => sup[c]).join("");
+  }
+
+  const state = { q: 3.003e-6, px: 0.5, py: Math.sqrt(3) / 2 };
+  $("q").value = Math.log10(state.q).toFixed(2);
+
+  // ---------- static layer ----------
+  for (let gx = -1; gx <= 2; gx += 0.5) el("line", { x1: X(gx), x2: X(gx), y1: 0, y2: H, stroke: "var(--line)", "stroke-width": gx % 1 ? 0.5 : 1 });
+  for (let gy = -1; gy <= 1; gy += 0.5) el("line", { y1: Y(gy), y2: Y(gy), x1: 0, x2: W, stroke: "var(--line)", "stroke-width": gy % 1 ? 0.5 : 1 });
+  for (let gx = -1; gx <= 2; gx++) el("text", { x: X(gx) + 4, y: H - 8, "font-size": 11, fill: "var(--muted)", "font-family": "var(--font-data)" }).textContent = gx + " r";
+
+  // Cassini oval about midpoint (0.5, 0): rho^2 = a^2 cos2t + sqrt(b^4 - a^4 sin^2 2t), a = 0.5, b = 1
+  const a = 0.5, b = 1, pts = [];
+  for (let i = 0; i <= 360; i++) {
+    const t = i * Math.PI / 180;
+    const rho = Math.sqrt(a * a * Math.cos(2 * t) + Math.sqrt(b ** 4 - a ** 4 * Math.sin(2 * t) ** 2));
+    pts.push([X(0.5 + rho * Math.cos(t)), Y(rho * Math.sin(t))]);
+  }
+  el("polygon", { points: pts.map(p => p.join(",")).join(" "), fill: "var(--oval)", stroke: "var(--good)", "stroke-width": 2.2 });
+  el("text", { x: X(0.5), y: Y(1.03) - 6, "text-anchor": "middle", "font-size": 12, fill: "var(--good)", "font-weight": 600 }).textContent = "r₁·r₂ = r²";
+
+  // axis M1–M2 and reference marks
+  el("line", { x1: X(-1.3), x2: X(2.3), y1: Y(0), y2: Y(0), stroke: "var(--muted)", "stroke-width": 0.8, "stroke-dasharray": "2 4" });
+  el("line", { x1: X(0), x2: X(1), y1: Y(0), y2: Y(0), stroke: "var(--ink)", "stroke-width": 1.5 });
+  el("text", { x: X(0.5), y: Y(0) + 18, "text-anchor": "middle", "font-size": 12, fill: "var(--ink)" }).textContent = "r = 1 AU";
+  const mark = (x, y, label, dy = -10) => {
+    el("circle", { cx: X(x), cy: Y(y), r: 3.5, fill: "var(--good)" });
+    el("text", { x: X(x), y: Y(y) + dy, "text-anchor": "middle", "font-size": 10.5, fill: "var(--good)", "font-family": "var(--font-data)" }).textContent = label;
+  };
+  mark(-1 / PHI, 0, "0.618 r", 16);
+  mark(PHI, 0, "1.618 r", 16);
+  mark(0.5, Math.sqrt(3) / 2, "apex", -10);
+
+  // dynamic layer
+  const dyn = el("g", {});
+  const c1 = el("circle", { fill: "none", stroke: "var(--earth)", "stroke-width": 1.5, "stroke-dasharray": "6 5" }, dyn);
+  const c2 = el("circle", { fill: "none", stroke: "var(--sun)", "stroke-width": 1.5, "stroke-dasharray": "6 5" }, dyn);
+  const c2note = el("text", { x: W - 10, y: 22, "text-anchor": "end", "font-size": 11, fill: "var(--sun)", "font-family": "var(--font-data)" }, dyn);
+  const c1note = el("text", { "font-size": 11, fill: "var(--earth)", "font-family": "var(--font-data)" }, dyn);
+  const bary = el("g", {}, dyn);
+  const baryX = el("path", { stroke: "var(--muted)", "stroke-width": 2, fill: "none" }, bary);
+  const baryT = el("text", { "font-size": 10.5, fill: "var(--muted)", "text-anchor": "middle", "font-family": "var(--font-data)" }, bary);
+  const l1 = el("line", { stroke: "var(--red)", "stroke-width": 2.5, "stroke-linecap": "round" }, dyn);
+  const l2 = el("line", { stroke: "var(--red)", "stroke-width": 2.5, "stroke-linecap": "round" }, dyn);
+  const t1 = el("text", { "font-size": 14, fill: "var(--red)", "font-weight": 600 }, dyn);
+  const t2 = el("text", { "font-size": 14, fill: "var(--red)", "font-weight": 600 }, dyn);
+  const sun = el("circle", { cx: X(1), cy: Y(0), r: 16, fill: "var(--sun)" });
+  el("text", { x: X(1), y: Y(0) - 22, "text-anchor": "middle", "font-size": 13, fill: "var(--ink)", "font-weight": 600 }).textContent = "M₂";
+  const earth = el("circle", { cx: X(0), cy: Y(0), fill: "var(--earth)" });
+  el("text", { x: X(0), y: Y(0) - 22, "text-anchor": "middle", "font-size": 13, fill: "var(--ink)", "font-weight": 600 }).textContent = "M₁";
+  const pRing = el("circle", { r: 9, fill: "var(--panel)", stroke: "var(--red)", "stroke-width": 2.5 });
+  const pText = el("text", { "font-size": 13, fill: "var(--red)", "font-weight": 600 });
+  pText.textContent = "P";
+
+  function massPoint(q) {
+    const d1 = Math.sqrt(q), d2 = 1 / Math.sqrt(q);
+    if (Math.abs(d2 - d1) > 1 + 1e-12) return null;
+    const x = (d1 * d1 - d2 * d2 + 1) / 2;
+    return { x, y: Math.sqrt(Math.max(0, d1 * d1 - x * x)) };
+  }
+
+  function update() {
+    const q = state.q, d1 = Math.sqrt(q), d2 = 1 / Math.sqrt(q);
+    $("qOut").textContent = sci(q) + (q < 1 ? `  (M₂ is ${sci(1 / q)}× heavier)` : "");
+    earth.setAttribute("r", Math.max(5, 16 * Math.cbrt(q)));
+
+    c1.setAttribute("cx", X(0)); c1.setAttribute("cy", Y(0)); c1.setAttribute("r", Math.max(d1 * S, 0.1));
+    c2.setAttribute("cx", X(1)); c2.setAttribute("cy", Y(0)); c2.setAttribute("r", d2 * S);
+    const c2visible = d2 < 2.2;
+    c2note.textContent = c2visible ? "" : `r₂ circle: radius ${sci(d2)} r, far outside this view →`;
+    c1note.setAttribute("x", X(0) + Math.max(d1 * S, 6) + 4); c1note.setAttribute("y", Y(0) + 34);
+    c1note.textContent = d1 * S < 6 ? `r₁ circle: radius ${sci(d1)} r (${sci(d1 * AU / 1000)} km)` : "";
+
+    const bx = 1 / (1 + q), s = 5;
+    baryX.setAttribute("d", `M${X(bx) - s},${Y(0) - s}L${X(bx) + s},${Y(0) + s}M${X(bx) - s},${Y(0) + s}L${X(bx) + s},${Y(0) - s}`);
+    baryT.setAttribute("x", X(bx)); baryT.setAttribute("y", Y(0) + 34); baryT.textContent = "barycenter";
+
+    const { px, py } = state;
+    const r1 = Math.hypot(px, py), r2 = Math.hypot(px - 1, py), eps = r1 * r2;
+    l1.setAttribute("x1", X(0)); l1.setAttribute("y1", Y(0)); l1.setAttribute("x2", X(px)); l1.setAttribute("y2", Y(py));
+    l2.setAttribute("x1", X(1)); l2.setAttribute("y1", Y(0)); l2.setAttribute("x2", X(px)); l2.setAttribute("y2", Y(py));
+    const off = py >= 0 ? -10 : 18;
+    t1.setAttribute("x", X(px / 2) - 22); t1.setAttribute("y", Y(py / 2) + off); t1.textContent = "r₁";
+    t2.setAttribute("x", X((px + 1) / 2) + 8); t2.setAttribute("y", Y(py / 2) + off); t2.textContent = "r₂";
+    pRing.setAttribute("cx", X(px)); pRing.setAttribute("cy", Y(py));
+    pText.setAttribute("x", X(px) + 12); pText.setAttribute("y", Y(py) - 10);
+
+    const pill = $("pill");
+    if (Math.abs(eps - 1) < 0.01) { pill.className = "pill ok"; pill.textContent = "on the oval: force = Newton's"; }
+    else if (eps < 1) { pill.className = "pill bad"; pill.textContent = `inside: force ${(1 / eps).toFixed(2)}× too strong`; }
+    else { pill.className = "pill mid"; pill.textContent = `outside: force ${(1 / eps).toFixed(2)}× too weak`; }
+
+    const rows = [
+      ["r₁ = |M₁P|", r1.toFixed(3) + " r", sci(r1 * AU) + " m"],
+      ["r₂ = |M₂P|", r2.toFixed(3) + " r", sci(r2 * AU) + " m"],
+      ["r₁·r₂ / r²", eps.toFixed(3), ""],
+      ["r₁ / r₂ at P", sci(r1 / r2), ""],
+      ["m₁ / m₂", sci(q), ""],
+      ["Mass rule wants r₁", sci(d1) + " r", sci(d1 * AU) + " m"],
+      ["Mass rule wants r₂", sci(d2) + " r", sci(d2 * AU) + " m"],
+    ];
+    $("rows").innerHTML = rows.map(r => `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td></tr>`).join("");
+
+    const mp = massPoint(q), v = $("verdict");
+    if (mp) {
+      v.className = "verdict";
+      v.innerHTML = `<b>A shared point exists.</b> With m₁/m₂ = ${sci(q)}, the r₁ and r₂ circles cross on the oval at P = (${mp.x.toFixed(3)}, ±${mp.y.toFixed(3)}) r. Measure r₁ from M₁ and r₂ from M₂, both to that point.`;
+    } else {
+      v.className = "verdict bad";
+      v.innerHTML = `<b>No shared point exists.</b> The mass rule needs r₂ − r₁ = ${sci(d2 - d1)} r, but from one point r₂ − r₁ can never exceed r (the triangle inequality). For these masses r₁ and r₂ are two separate scales: r₁ is a sphere of radius ${sci(d1 * AU / 1000)} km around M₁'s centre and r₂ a sphere of radius ${sci(d2)} AU around M₂'s centre. The masses must be within a factor of 2.618 (m₁/m₂ ≥ 0.382) for a common point.`;
+    }
+  }
+
+  // dragging P
+  let drag = false;
+  function fromPointer(e) {
+    const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    state.px = ux(Math.min(W, Math.max(0, p.x))); state.py = uy(Math.min(H, Math.max(0, p.y)));
+    update();
+  }
+  svg.addEventListener("pointerdown", e => { drag = true; svg.setPointerCapture(e.pointerId); fromPointer(e); });
+  svg.addEventListener("pointermove", e => { if (drag) fromPointer(e); });
+  svg.addEventListener("pointerup", () => drag = false);
+  svg.addEventListener("pointercancel", () => drag = false);
+
+  const setQ = q => { state.q = q; $("q").value = Math.log10(q).toFixed(2); update(); };
+  $("q").addEventListener("input", () => { state.q = Math.pow(10, +$("q").value); update(); });
+  document.querySelectorAll("[data-q]").forEach(btn => btn.addEventListener("click", () => setQ(+btn.dataset.q)));
+  const moveP = (x, y) => { state.px = x; state.py = y; update(); };
+  $("sMass").addEventListener("click", () => {
+    const mp = massPoint(state.q);
+    mp ? moveP(mp.x, mp.y) : moveP(-1 / PHI, 0); // closest the oval gets to the rule: golden point beyond the lighter body
+  });
+  $("sApex").addEventListener("click", () => moveP(0.5, Math.sqrt(3) / 2));
+  $("sG1").addEventListener("click", () => moveP(-1 / PHI, 0));
+  $("sG2").addEventListener("click", () => moveP(PHI, 0));
+  $("sBary").addEventListener("click", () => moveP(1 / (1 + state.q), 0));
+
+  update();
+})();
+</script>
