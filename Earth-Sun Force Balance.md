@@ -622,9 +622,191 @@ The Moon/Earth values are about 0.5% off because the Moon's orbit is not a perfe
 
 Equal masses show the mechanism plainly: f₁ = f₂ = 1/2, so f₁·f₂ = 1/4, and P sits at the apex of the equilateral triangle from section 6. Then K/μ = 4G, and the factor of 4 is exactly undone by the 1/4 from P.
 
-## 13. Symbol reference
+## 13. Replacing G with the orbit balance
 
-Every symbol used in sections 1–12, with what it means, what it looks like in the geometry, its formula and how it is defined. Earth–Sun values are in brackets. M₁ and M₂ name the bodies; m₁ and m₂ are their masses; M is the total mass.
+G can be replaced by what the orbit measures, G = K/M with K = 4π²a³/T² and M = m₁ + m₂. This keeps m₁ and m₂, keeps the units right, and removes the letter G: the force becomes F = μ·K/(r₁·r₂).
+
+### Why √m alone cannot replace √G
+
+Writing G₁ = √m₁·r₁/r and G₂ = √m₂·r₂/r gives, when r₁·r₂ = r²:
+
+```latex
+G_1 G_2 = \sqrt{m_1 m_2}\,\frac{r_1 r_2}{r^2} = \sqrt{m_1 m_2}
+```
+
+| Quantity | √m proposal | G |
+| --- | --- | --- |
+| Earth–Sun value | 3.45×10²⁷ | 6.674×10⁻¹¹ |
+| Units | kg | m³·kg⁻¹·s⁻² |
+| Same for every system? | no, it depends on the masses | yes |
+
+Newton's law already contains the masses. G is the exchange rate that turns kg into pull: it carries the m³/s² and divides out a kg. Replacing √G by √m counts the mass twice and loses the length and time units.
+
+### The corrected per-body parts
+
+Replace √G by √(K/M), which uses m₁, m₂ and the observed orbit:
+
+```latex
+\sqrt{G} \;\rightarrow\; \sqrt{\frac{K}{m_1 + m_2}} = \frac{2\pi}{T}\sqrt{\frac{a^3}{m_1 + m_2}}
+```
+
+```latex
+G_1 = \frac{2\pi}{T}\sqrt{\frac{a^3}{m_1 + m_2}}\cdot\frac{r_1}{r} \qquad G_2 = \frac{2\pi}{T}\sqrt{\frac{a^3}{m_1 + m_2}}\cdot\frac{r_2}{r}
+```
+
+The units are √(m³/(kg·s²)), the same as √G.
+
+### Each body with its own mass
+
+Section 12 gives each body's share of the orbit balance from P, G·mᵢ = K·fᵢ with fᵢ = rᵢ/(r₁ + r₂). Each body can then carry its own mass:
+
+```latex
+G_1 = \sqrt{\frac{K f_1}{m_1}}\cdot\frac{r_1}{r} \qquad G_2 = \sqrt{\frac{K f_2}{m_2}}\cdot\frac{r_2}{r}
+```
+
+This is the √m proposal corrected: each body's share of the orbit balance divided by its own mass, instead of the mass alone.
+
+Earth check: K·f₁/m₁ = 3.986×10¹⁴ / 5.972×10²⁴ = 6.674×10⁻¹¹ ✓. The Sun gives the same value.
+
+### The force with no G in it
+
+Each body's gravitational charge is √G·mᵢ = √(K·fᵢ·mᵢ). Putting both into the split force, and using f₁·f₂ = μ/M and m₁·m₂ = μ·M, the square roots combine to exactly μ:
+
+```latex
+F = \frac{\sqrt{K f_1 m_1}}{r_1}\cdot\frac{\sqrt{K f_2 m_2}}{r_2} = \frac{\mu\, K}{r_1 r_2}
+```
+
+| Factor | Meaning | Comes from |
+| --- | --- | --- |
+| μ = m₁m₂/(m₁ + m₂) | reduced mass | m₁ and m₂ |
+| K = 4π²a³/T² | orbit balance | orbit size and period |
+| r₁·r₂ | the split r², balanced when it equals r² | the point P |
+
+Units: kg × m³/s² ÷ m² = kg·m/s² = N ✓
+
+Earth–Sun check: 5.972×10²⁴ × 1.327×10²⁰ / 2.238×10²² = 3.54×10²² N ✓, the same force as Newton's law.
+
+For a circular orbit with r₁·r₂ = r², this becomes F = μ·(2π/T)²·r: the reduced mass times its turning acceleration, ordinary motion with no G in sight.
+
+### Summary
+
+| Version | Per-body factor | Product | Works? |
+| --- | --- | --- | --- |
+| Option B (section 7) | G₁ = √G·r₁/r | G·ε | yes, a split of G alone |
+| √m proposal | √m₁·r₁/r | √(m₁m₂) | no: wrong units, not constant |
+| Orbit-balance form | G₁ = √(K·f₁/m₁)·r₁/r | G·ε | yes, with no G written |
+| Gravitational charge | √(K·f₁·m₁)/r₁ | F = μ·K/(r₁r₂) | yes: the force with no G written |
+
+G leaves the formula, not nature: K still equals G·M physically, so G is replaced by the observed a and T rather than explained away. Kilograms are still needed for μ; without a mass in kg, only G·m is known, never m alone (sections 9–10).
+
+## 14. G as the unit force
+
+F and G are different quantities, but G is what F becomes in one standard setup: two 1 kg masses 1 m apart. Then F = 6.674×10⁻¹¹ N, the value of G.
+
+### Why F is not G in general
+
+| Quantity | F | G |
+| --- | --- | --- |
+| Units | N (kg·m/s²) | m³·kg⁻¹·s⁻² |
+| Earth–Sun value | 3.54×10²² N | 6.674×10⁻¹¹ |
+| Depends on the pair of bodies? | yes: their masses and distance | no, the same for every pair |
+
+F is the pull between one particular pair of bodies. G is the same for every pair.
+
+### How the per-body parts and the force connect
+
+The per-body parts from section 13 multiply to:
+
+```latex
+G_1 G_2 = \frac{K}{M}\cdot\frac{r_1 r_2}{r^2} = G\,\varepsilon
+```
+
+The force with no G written is F = μ·K/(r₁·r₂). Dividing one by the other:
+
+```latex
+F = G_1 G_2\,\frac{m_1 m_2}{r_1 r_2}
+```
+
+When balanced (ε = 1) this is exactly F = G·m₁m₂/r². G is the per-kilogram, per-metre part; F is what results once the actual masses and distances are filled in.
+
+### When F equals G
+
+Take the standard case:
+
+- two 1 kg masses, so f₁ = f₂ = 1/2 and μ = 0.5 kg
+- K = G × 2 kg
+- P at the apex of the equilateral triangle, with r₁ = r₂ = r = 1 m
+
+```latex
+F = \frac{\mu\,K}{r_1 r_2} = \frac{0.5\ \text{kg} \times (G \times 2\ \text{kg})}{1\ \text{m} \times 1\ \text{m}} = G \times 1\ \text{kg}^2/\text{m}^2 = 6.674\times10^{-11}\ \text{N}
+```
+
+So G is the force between two 1 kg masses 1 m apart:
+
+```latex
+G = \frac{F\, r_1 r_2}{m_1 m_2}
+```
+
+the force per kg² at one metre².
+
+### The full picture
+
+- F: the actual pull between a particular pair of bodies.
+- G: that same pull scaled to the unit case, 1 kg and 1 kg at 1 m, with P at the equal-mass apex.
+- G₁, G₂: each body's half of that unit pull, √G·rᵢ/r.
+
+The force formula does not give G for Earth and the Sun. It gives G when the two bodies are the unit pair: 6.674×10⁻¹¹ N, a pull about as small as the weight of a few bacteria.
+
+## 15. Definition of G
+
+G is the pull between two 1 kg masses whose centres are 1 m apart; equivalently, the orbit balance that 1 kg of mass produces at 1 m. The unit-force reading (section 14) and the exchange-rate reading (sections 11–12) are the same definition seen from two sides.
+
+> G is the pull between two 1 kg masses whose centres are 1 m apart. Equivalently, it is the orbit balance that 1 kg of mass produces at 1 m.
+>
+> G = 6.674×10⁻¹¹ N per (kg²/m²) = 6.674×10⁻¹¹ m³/s² per kg
+
+### The two readings agree
+
+| Reading | Formula | With 1 kg and 1 m | Result |
+| --- | --- | --- | --- |
+| Unit force (section 14) | G = F·r₁r₂ / (m₁m₂) | F between two 1 kg masses, P at the apex, r₁ = r₂ = 1 m | 6.674×10⁻¹¹ N |
+| Exchange rate (sections 11–12) | G = K / M | K for 1 kg of mass, in m³/s² | 6.674×10⁻¹¹ m³/s² |
+
+Both say the same thing: 1 kg of mass produces 6.674×10⁻¹¹ units of gravity at 1 m. One reading measures it as a pull, the other as an orbit.
+
+### The unit orbit: G as a time
+
+Putting the orbit form G = 4π²a³/(T²·M) into the unit case, a speck orbiting a 1 kg ball at a = 1 m, G depends only on the period T₁ of that unit orbit:
+
+```latex
+G = \left(\frac{2\pi}{T_1}\right)^2 \times \frac{1\ \text{m}^3}{1\ \text{kg}}
+\qquad
+T_1 = \frac{2\pi}{\sqrt{G}} = 7.69\times10^5\ \text{s} \approx 8.9\ \text{days}
+```
+
+So G is the squared turning rate of the unit orbit. A speck circling a 1 kg ball at 1 m would take about 8.9 days per loop, and that one observed time is the whole content of G. It is the only observed parameter, for the unit case.
+
+### How it fits P and the balance ratios
+
+In the unit pair of two 1 kg masses:
+
+- each body's share is f₁ = f₂ = 1/2
+- P sits at the apex of the equilateral triangle on M₁M₂, with r₁ = r₂ = r = 1 m
+- each body's half is G₁ = G₂ = √G·r/r = √G
+
+G is the unit pull at the unit balance point, and every real system is a scaled copy:
+
+```latex
+F = G\cdot\frac{(m_1/1\ \text{kg})\,(m_2/1\ \text{kg})}{(r_1/1\ \text{m})\,(r_2/1\ \text{m})}\ \text{N}
+```
+
+### What still comes from nature
+
+The definition fixes what G is. Its number comes from how the units are set (SI defines the metre through c, the second through caesium and the kilogram through Planck's constant) and from one observation of the unit case: T₁ ≈ 8.9 days, or the matching Cavendish twist from section 10.
+
+## 16. Symbol reference
+
+Every symbol used in sections 1–15, with what it means, what it looks like in the geometry, its formula and how it is defined. Earth–Sun values are in brackets. M₁ and M₂ name the bodies; m₁ and m₂ are their masses; M is the total mass.
 
 ### Bodies and distances
 
