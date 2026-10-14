@@ -2,6 +2,8 @@
 
 Oct 14, 2026 · @Shaimaa Soltan
 
+Created by Shaimaa Said Soltan
+
 ## 1. The balance condition
 
 The modified law gives the real Newtonian force only when r₁·r₂ = r², so r is the geometric mean of r₁ and r₂.
@@ -803,6 +805,8 @@ F = G\cdot\frac{(m_1/1\ \text{kg})\,(m_2/1\ \text{kg})}{(r_1/1\ \text{m})\,(r_2/
 ### What still comes from nature
 
 The definition fixes what G is. Its number comes from how the units are set (SI defines the metre through c, the second through caesium and the kilogram through Planck's constant) and from one observation of the unit case: T₁ ≈ 8.9 days, or the matching Cavendish twist from section 10.
+
+Interactive tool for this definition: [Definition of G](https://claude.ai/artifact/HQi2EzQETUKYH8BEnWHcCN).
 
 ## 16. Symbol reference
 

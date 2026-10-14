@@ -1,0 +1,250 @@
+<title>Definition of G</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,500&display=swap">
+<style>
+/* Layout: header + definition card, then two instruments (unit pull | unit orbit) side by side, then the scaled-copies table. */
+:root {
+  --bg: #eef1f5;
+  --panel: #ffffff;
+  --ink: #18202c;
+  --muted: #5b6676;
+  --line: #d5dbe4;
+  --sun: #c46a12;
+  --earth: #1f63b0;
+  --red: #c7303a;
+  --good: #2b7a4b;
+  --level: #7a3fb0;
+  --font-display: "Newsreader", Georgia, serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e131c; --panel: #161d29; --ink: #e4e9f1; --muted: #93a0b3; --line: #2a3445;
+    --sun: #f0a043; --earth: #6aa8f0; --red: #f07178; --good: #6fcf97; --level: #c39af0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e131c; --panel: #161d29; --ink: #e4e9f1; --muted: #93a0b3; --line: #2a3445;
+  --sun: #f0a043; --earth: #6aa8f0; --red: #f07178; --good: #6fcf97; --level: #c39af0;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 40px; display: grid; gap: 20px; }
+header h1 { font-family: var(--font-display); font-weight: 500; font-size: clamp(26px, 4vw, 36px); margin: 0; }
+header p { margin: 6px 0 0; color: var(--muted); max-width: 80ch; }
+.eq { font-family: var(--font-data); font-size: 14px; color: var(--ink); white-space: nowrap; }
+.def { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--level); border-radius: 0 10px 10px 0; padding: 16px 20px; display: grid; gap: 12px; grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr); align-items: center; }
+@media (max-width: 760px) { .def { grid-template-columns: 1fr; } }
+.def blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(18px, 2.2vw, 22px); line-height: 1.4; }
+.def .vals { font-family: var(--font-data); font-size: 13px; color: var(--muted); display: grid; gap: 4px; }
+.def .big { font-family: var(--font-data); font-size: 28px; color: var(--level); font-weight: 500; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 12px; min-width: 0; align-content: start; }
+.panel h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.07em; margin: 0; color: var(--muted); font-weight: 600; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sub { margin: 0; font-size: 13px; color: var(--muted); }
+.ctls { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.ctl { display: grid; gap: 2px; min-width: 0; }
+.ctl label { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; gap: 6px; }
+.ctl output { font-family: var(--font-data); color: var(--ink); text-transform: none; letter-spacing: 0; }
+input[type=range] { width: 100%; accent-color: var(--level); }
+button { font: inherit; font-size: 13px; padding: 6px 11px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+button:hover { border-color: var(--level); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--level); outline-offset: 2px; }
+svg, canvas { width: 100%; display: block; }
+svg { height: auto; }
+.canvas-box { width: 100%; aspect-ratio: 1 / 1; max-width: 100%; }
+canvas { height: 100%; border-radius: 6px; }
+.readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+.cell { background: var(--bg); border-radius: 6px; padding: 8px 10px; display: grid; gap: 2px; min-width: 0; }
+.cell span { font-size: 12.5px; color: var(--muted); }
+.cell b { font-family: var(--font-data); font-weight: 500; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.cell.key { outline: 2px solid var(--level); }
+.cell.key b { color: var(--level); }
+.table-box { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-size: 13px; color: var(--muted); font-weight: 600; }
+td.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+td.g { color: var(--level); font-weight: 600; }
+.note { font-size: 13px; color: var(--muted); margin: 0; max-width: 90ch; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Definition of G</h1>
+    <p class="byline">Created by Shaimaa Said Soltan</p>
+    <p>One definition, two readings. As a <b>pull</b>: the force between two 1 kg masses 1 m apart. As an <b>orbit</b>: the orbit balance that 1 kg of mass produces at 1 m. Change the masses and distances below; the force and the orbit change, but G stays the same.</p>
+  </header>
+
+  <section class="def" aria-label="Definition">
+    <blockquote>G is the pull between two 1 kg masses whose centres are 1 m apart. Equivalently, it is the orbit balance that 1 kg of mass produces at 1 m.</blockquote>
+    <div class="vals">
+      <span class="big">6.674×10⁻¹¹</span>
+      <span>N per (kg²/m²)</span>
+      <span>= m³/s² per kg</span>
+      <span>= (2π / 8.9 days)² × 1 m³/kg</span>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="panel" aria-label="Unit pull">
+      <h2>Reading 1: the unit pull <button type="button" id="unitPull">Back to 1 kg, 1 kg, 1 m</button></h2>
+      <p class="sub">Two masses, the point P where r₁ and r₂ meet (the mass rule r₁/r₂ = m₁/m₂ with r₁·r₂ = r²), and the pull between them.</p>
+      <svg id="pull" viewBox="0 0 520 330" role="img" aria-label="Two masses with the point P above them"></svg>
+      <div class="ctls">
+        <div class="ctl"><label for="m1">m₁ <output id="m1o"></output></label><input id="m1" type="range" min="1" max="2.5" step="0.05" value="1"></div>
+        <div class="ctl"><label for="m2">m₂ <output id="m2o"></output></label><input id="m2" type="range" min="1" max="2.5" step="0.05" value="1"></div>
+        <div class="ctl"><label for="rr">r <output id="rro"></output></label><input id="rr" type="range" min="0.5" max="2" step="0.05" value="1"></div>
+      </div>
+      <div class="readout" id="pullOut"></div>
+    </section>
+
+    <section class="panel" aria-label="Unit orbit">
+      <h2>Reading 2: the unit orbit <span><button type="button" id="unitOrbit">Back to 1 kg, 1 m</button> <button type="button" id="play">Pause</button></span></h2>
+      <p class="sub">A speck circling a ball of mass M at distance a. Time runs at 1 day per half second.</p>
+      <div class="canvas-box"><canvas id="orbit" aria-label="A speck orbiting a ball"></canvas></div>
+      <div class="ctls">
+        <div class="ctl"><label for="mb">M <output id="mbo"></output></label><input id="mb" type="range" min="0.5" max="5" step="0.1" value="1"></div>
+        <div class="ctl"><label for="aa">a <output id="aao"></output></label><input id="aa" type="range" min="0.5" max="2" step="0.05" value="1"></div>
+      </div>
+      <div class="readout" id="orbitOut"></div>
+    </section>
+  </div>
+
+  <section class="panel" aria-label="Scaled copies">
+    <h2>Every real system is a scaled copy</h2>
+    <p class="sub">G from each orbit's observed size and period alone: K = 4π²a³/T², then G = K/M. The unit pair is the definition; the others are measurements.</p>
+    <div class="table-box">
+      <table>
+        <thead><tr><th>System</th><th>M = m₁ + m₂</th><th>a</th><th>Observed T</th><th>K = 4π²a³/T²</th><th>G = K/M</th><th>Pull F</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="note">Every row gives the same G to within about 0.3%; the Moon's orbit is slightly elliptical. The pull F ranges over 34 powers of ten, from 6.67×10⁻¹¹ N to 4.16×10²³ N, while G stays fixed. The unit-pair period, 6.3 days, is shorter than the 8.9 days of a speck because both 1 kg masses pull (M = 2 kg).</p>
+  </section>
+</div>
+
+<script>
+(() => {
+  const G = 6.674e-11, DAY = 86400;
+  const $ = id => document.getElementById(id);
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (p, t, a) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
+  const sup = { "-": "⁻", "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹" };
+  function sci(x, d = 3) {
+    const e = Math.floor(Math.log10(Math.abs(x)));
+    if (e >= -2 && e <= 3) return x.toLocaleString("en-US", { maximumSignificantDigits: d });
+    return (x / Math.pow(10, e)).toFixed(d - 1) + "×10" + String(e).split("").map(c => sup[c]).join("");
+  }
+  const cell = (label, value, key) => `<div class="cell${key ? " key" : ""}"><span>${label}</span><b>${value}</b></div>`;
+
+  // ---------- Reading 1: unit pull ----------
+  const svg = $("pull"), S = 150, OX = 110, OY = 280;
+  function drawPull() {
+    const m1 = +$("m1").value, m2 = +$("m2").value, r = +$("rr").value;
+    $("m1o").textContent = m1.toFixed(2) + " kg"; $("m2o").textContent = m2.toFixed(2) + " kg"; $("rro").textContent = r.toFixed(2) + " m";
+    const r1 = r * Math.sqrt(m1 / m2), r2 = r * Math.sqrt(m2 / m1);
+    const px = (r1 * r1 - r2 * r2 + r * r) / (2 * r), py = Math.sqrt(Math.max(0, r1 * r1 - px * px));
+    const X = x => OX + x * S, Y = y => OY - y * S;
+    svg.innerHTML = "";
+    el(svg, "line", { x1: 0, x2: 520, y1: OY, y2: OY, stroke: "var(--line)", "stroke-dasharray": "2 4" });
+    // r segment
+    el(svg, "line", { x1: X(0), y1: OY + 26, x2: X(r), y2: OY + 26, stroke: "var(--muted)", "stroke-width": 1.2 });
+    el(svg, "text", { x: X(r / 2), y: OY + 42, "text-anchor": "middle", "font-size": 13, fill: "var(--muted)", "font-family": "var(--font-data)" }).textContent = "r = " + r.toFixed(2) + " m";
+    // lines to P
+    el(svg, "line", { x1: X(0), y1: Y(0), x2: X(px), y2: Y(py), stroke: "var(--red)", "stroke-width": 2.5 });
+    el(svg, "line", { x1: X(r), y1: Y(0), x2: X(px), y2: Y(py), stroke: "var(--red)", "stroke-width": 2.5 });
+    el(svg, "text", { x: X(px / 2) - 34, y: Y(py / 2), "font-size": 13, fill: "var(--red)", "font-family": "var(--font-data)" }).textContent = "r₁=" + r1.toFixed(2);
+    el(svg, "text", { x: X((px + r) / 2) + 8, y: Y(py / 2), "font-size": 13, fill: "var(--red)", "font-family": "var(--font-data)" }).textContent = "r₂=" + r2.toFixed(2);
+    el(svg, "circle", { cx: X(px), cy: Y(py), r: 7, fill: "var(--panel)", stroke: "var(--red)", "stroke-width": 2.5 });
+    el(svg, "text", { x: X(px) + 10, y: Y(py) - 8, "font-size": 14, fill: "var(--red)", "font-weight": 600 }).textContent = "P";
+    // masses
+    const rad = m => 14 * Math.cbrt(m);
+    el(svg, "circle", { cx: X(0), cy: Y(0), r: rad(m1), fill: "var(--earth)" });
+    el(svg, "circle", { cx: X(r), cy: Y(0), r: rad(m2), fill: "var(--sun)" });
+    el(svg, "text", { x: X(0), y: Y(0) + 5, "text-anchor": "middle", "font-size": 12, fill: "#fff", "font-weight": 600 }).textContent = "m₁";
+    el(svg, "text", { x: X(r), y: Y(0) + 5, "text-anchor": "middle", "font-size": 12, fill: "#fff", "font-weight": 600 }).textContent = "m₂";
+    const unit = Math.abs(m1 - 1) < 1e-9 && Math.abs(m2 - 1) < 1e-9 && Math.abs(r - 1) < 1e-9;
+    if (unit) el(svg, "text", { x: X(px), y: Y(py) - 26, "text-anchor": "middle", "font-size": 12, fill: "var(--level)" }).textContent = "apex of the equilateral triangle";
+    const F = G * m1 * m2 / (r1 * r2);
+    $("pullOut").innerHTML =
+      cell("Pull F", sci(F) + " N", unit) +
+      cell("r₁·r₂ / r²", (r1 * r2 / (r * r)).toFixed(3)) +
+      cell("G₁ = √G·r₁/r", sci(Math.sqrt(G) * r1 / r)) +
+      cell("G₂ = √G·r₂/r", sci(Math.sqrt(G) * r2 / r)) +
+      cell("G = F·r₁r₂/(m₁m₂)", sci(F * r1 * r2 / (m1 * m2), 4), true);
+  }
+  ["m1", "m2", "rr"].forEach(id => $(id).addEventListener("input", drawPull));
+  $("unitPull").addEventListener("click", () => { $("m1").value = 1; $("m2").value = 1; $("rr").value = 1; drawPull(); });
+
+  // ---------- Reading 2: unit orbit ----------
+  const cv = $("orbit"), ctx = cv.getContext("2d");
+  let angle = 0, days = 0, last = 0, running = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+  $("play").textContent = running ? "Pause" : "Play";
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  function orbitVals() {
+    const M = +$("mb").value, a = +$("aa").value;
+    const K = G * M, T = 2 * Math.PI * Math.sqrt(a ** 3 / K);
+    return { M, a, K, T };
+  }
+  function orbitReadout() {
+    const { M, a, K, T } = orbitVals();
+    $("mbo").textContent = M.toFixed(1) + " kg"; $("aao").textContent = a.toFixed(2) + " m";
+    const unit = Math.abs(M - 1) < 1e-9 && Math.abs(a - 1) < 1e-9;
+    $("orbitOut").innerHTML =
+      cell("Period T", (T / DAY).toFixed(2) + " days", unit) +
+      cell("K = G·M", sci(K) + " m³/s²") +
+      cell("Turning rate 2π/T", sci(2 * Math.PI / T) + " /s") +
+      cell("G = 4π²a³/(T²M)", sci(4 * Math.PI ** 2 * a ** 3 / (T * T * M), 4), true);
+    angle = 0; days = 0;
+  }
+  function size() { const r = cv.getBoundingClientRect(), d = devicePixelRatio || 1; cv.width = Math.max(1, Math.round(r.width * d)); cv.height = Math.max(1, Math.round(r.height * d)); }
+  new ResizeObserver(() => { size(); drawOrbit(); }).observe(cv);
+  function drawOrbit() {
+    const { M, a, T } = orbitVals();
+    const w = cv.width, h = cv.height, d = devicePixelRatio || 1, s = Math.min(w, h) / 2 / 2.3;
+    ctx.fillStyle = css("--panel"); ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = css("--line"); ctx.lineWidth = d;
+    for (let k = 0.5; k <= 2; k += 0.5) { ctx.beginPath(); ctx.arc(w / 2, h / 2, k * s, 0, 2 * Math.PI); ctx.stroke(); }
+    ctx.setLineDash([6 * d, 5 * d]); ctx.strokeStyle = css("--level"); ctx.lineWidth = 1.5 * d;
+    ctx.beginPath(); ctx.arc(w / 2, h / 2, a * s, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = css("--sun"); ctx.beginPath(); ctx.arc(w / 2, h / 2, 14 * d * Math.cbrt(M), 0, 2 * Math.PI); ctx.fill();
+    const x = w / 2 + a * s * Math.cos(angle), y = h / 2 - a * s * Math.sin(angle);
+    ctx.fillStyle = css("--earth"); ctx.beginPath(); ctx.arc(x, y, 5 * d, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = css("--muted"); ctx.font = `${12 * d}px ${css("--font-data") || "monospace"}`;
+    ctx.fillText(`rings every 0.5 m · day ${days.toFixed(1)} of ${(T / DAY).toFixed(1)}`, 10 * d, h - 12 * d);
+  }
+  function tick(ts) {
+    const dt = Math.min(0.05, (ts - (last || ts)) / 1000); last = ts;
+    if (running) {
+      const { T } = orbitVals(), simDays = dt * 2;
+      days += simDays; angle += 2 * Math.PI * simDays * DAY / T;
+      if (days * DAY >= T) { days -= T / DAY; }
+    }
+    drawOrbit(); requestAnimationFrame(tick);
+  }
+  ["mb", "aa"].forEach(id => $(id).addEventListener("input", orbitReadout));
+  $("unitOrbit").addEventListener("click", () => { $("mb").value = 1; $("aa").value = 1; orbitReadout(); });
+  $("play").addEventListener("click", () => { running = !running; $("play").textContent = running ? "Pause" : "Play"; });
+
+  // ---------- Scaled copies ----------
+  const systems = [
+    { name: "Unit pair (definition)", m1: 1, m2: 1, a: 1, T: null },
+    { name: "Moon / Earth", m1: 7.342e22, m2: 5.972e24, a: 3.844e8, T: 27.322 * DAY },
+    { name: "Earth / Sun", m1: 5.972e24, m2: 1.989e30, a: 1.496e11, T: 365.256 * DAY },
+    { name: "Jupiter / Sun", m1: 1.898e27, m2: 1.989e30, a: 7.785e11, T: 4332.59 * DAY },
+  ];
+  $("rows").innerHTML = systems.map(s => {
+    const M = s.m1 + s.m2;
+    const T = s.T || 2 * Math.PI * Math.sqrt(s.a ** 3 / (G * M));
+    const K = 4 * Math.PI ** 2 * s.a ** 3 / (T * T);
+    const F = G * s.m1 * s.m2 / (s.a * s.a);
+    const Tt = T / DAY < 1000 ? (T / DAY).toFixed(2) + " days" : (T / DAY / 365.256).toFixed(2) + " years";
+    return `<tr><td>${s.name}</td><td class="num">${sci(M)} kg</td><td class="num">${sci(s.a)} m</td><td class="num">${Tt}</td><td class="num">${sci(K)} m³/s²</td><td class="num g">${sci(K / M, 4)}</td><td class="num">${sci(F)} N</td></tr>`;
+  }).join("");
+
+  drawPull(); orbitReadout(); size(); drawOrbit(); requestAnimationFrame(tick);
+})();
+</script>
