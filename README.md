@@ -10,13 +10,13 @@ The modified law gives the real Newtonian force only when r₁·r₂ = r², so r
 
 Newton's law needs the gravitational constant G = 6.674×10⁻¹¹ N·m²/kg². Labels follow the sketch: M₁ = Earth (small body), M₂ = Sun (large body).
 
-```latex
+```math
 F = \frac{G\,m_1 m_2}{r^2} \qquad F' = \frac{G\,m_1 m_2}{r_1 r_2}
 ```
 
 Setting F′ = F gives the balance condition:
 
-```latex
+```math
 r_1 \, r_2 = r^2 \quad\Longleftrightarrow\quad r = \sqrt{r_1 r_2}
 ```
 
@@ -34,13 +34,13 @@ A symmetric split, where each body contributes an equal share, fixes the pair: r
 
 The balance condition alone allows infinitely many pairs. Writing the force as a product of two "mass per distance" factors and making them equal adds the second rule:
 
-```latex
+```math
 F = G\left(\frac{m_1}{r_1}\right)\left(\frac{m_2}{r_2}\right), \qquad \frac{m_1}{r_1} = \frac{m_2}{r_2} \;\Rightarrow\; \frac{r_1}{r_2} = \frac{m_1}{m_2}
 ```
 
 Solving this with r₁·r₂ = r²:
 
-```latex
+```math
 r_1 = r\sqrt{\frac{m_1}{m_2}} \qquad r_2 = r\sqrt{\frac{m_2}{m_1}}
 ```
 
@@ -59,7 +59,7 @@ For Earth and the Sun the split gives r₁ ≈ 259,000 km and r₂ ≈ 577 AU, a
 | r₁·r₂ | 2.238×10²² m² | equals r² ✓ |
 | F | 3.54×10²² N | same as standard Newton |
 
-```latex
+```math
 F = \frac{6.674\times10^{-11} \times 5.972\times10^{24} \times 1.989\times10^{30}}{2.238\times10^{22}} \approx 3.54\times10^{22}\ \text{N}
 ```
 
@@ -69,7 +69,7 @@ Earth keeps its circular orbit at 29.8 km/s only when r₁·r₂ = r²; any othe
 
 Gravity must supply exactly the centripetal force, and the centripetal side uses the real distance r:
 
-```latex
+```math
 \frac{G\,m_1 m_2}{r_1 r_2} = \frac{m_1 v^2}{r} \quad\Rightarrow\quad v = \sqrt{\frac{G\,m_2\,r}{r_1 r_2}}
 ```
 
@@ -88,7 +88,7 @@ Using each body's distance to the shared centre of mass makes the force about 33
 - r₁ = r·m₂/(m₁+m₂) ≈ 1.496×10¹¹ m (Earth to barycenter)
 - r₂ = r·m₁/(m₁+m₂) ≈ 449 km (Sun to barycenter)
 
-```latex
+```math
 r_1 r_2 = r^2\,\frac{m_1 m_2}{(m_1+m_2)^2} \approx 3\times10^{-6}\,r^2
 ```
 
@@ -107,7 +107,7 @@ If r₁ and r₂ run from M₁ and M₂ to one shared point P, then P must lie o
 
 Define r₁ = |M₁P| and r₂ = |M₂P|, as in the sketch. The balance condition then becomes a curve in the plane:
 
-```latex
+```math
 |M_1P|\cdot|M_2P| = r^2
 ```
 
@@ -125,7 +125,7 @@ On the line M₁M₂ the condition reads d(d + r) = r², so d = r(√5 − 1)/2 
 
 The mass rule needs r₁ = r√(m₁/m₂) and r₂ = r√(m₂/m₁). From a single point the triangle inequality forces |r₂ − r₁| ≤ r. Along the oval, r₁/r₂ ranges only from 1/φ² to φ²:
 
-```latex
+```math
 \frac{1}{\varphi^2} = 0.382 \;\le\; \frac{m_1}{m_2} \;\le\; \varphi^2 = 2.618
 ```
 
@@ -151,17 +151,17 @@ G can be split three ways around the point P. In each one the true G is recovere
 
 Measure the force from P using only one distance. Each distance then needs its own constant:
 
-```latex
+```math
 F = \frac{G_1\,m_1 m_2}{r_1^2} = \frac{G_2\,m_1 m_2}{r_2^2} \quad\Rightarrow\quad G_1 = G\,\frac{r_1}{r_2}, \qquad G_2 = G\,\frac{r_2}{r_1}
 ```
 
-```latex
+```math
 G = \sqrt{G_1 G_2} \qquad \frac{G_1}{G_2} = \left(\frac{r_1}{r_2}\right)^2
 ```
 
 G is the geometric mean of the two local values, just as r = √(r₁·r₂). With the mass rule r₁/r₂ = m₁/m₂, the parts become G₁ = G·m₁/m₂ and G₂ = G·m₂/m₁, and the force takes a symmetric form:
 
-```latex
+```math
 F = \frac{G\,m_1^2}{r_1^2} = \frac{G\,m_2^2}{r_2^2}
 ```
 
@@ -178,7 +178,7 @@ Each body alone, at its own distance, produces the full mutual force.
 
 Give each body half of G, scaled by its distance to P:
 
-```latex
+```math
 G_1 = \sqrt{G}\,\frac{r_1}{r}, \qquad G_2 = \sqrt{G}\,\frac{r_2}{r}, \qquad G_1 G_2 = G\,\frac{r_1 r_2}{r^2} = G\,\varepsilon
 ```
 
@@ -196,7 +196,7 @@ This is the trade-off: either G stays fixed and P must sit on the oval, or the s
 
 With the speed of light c, G turns each mass into a length, its gravitational radius ρ = G·m/c². The force becomes the product of two unit-free ratios, one per body, each measured to P:
 
-```latex
+```math
 F = F_{\max}\,\frac{\rho_1}{r_1}\,\frac{\rho_2}{r_2}, \qquad \rho_i = \frac{G\,m_i}{c^2}, \qquad F_{\max} = \frac{c^4}{G} = 1.21\times10^{44}\ \text{N}
 ```
 
@@ -236,7 +236,7 @@ Ratios built from r₁, r₂ and r measure only the masses; G cancels out of the
 
 With the mass rule r₁ = r√(m₁/m₂) and r₂ = r√(m₂/m₁), four ratios hold for any pair of bodies:
 
-```latex
+```math
 \frac{r_1 r_2}{r^2} = 1 \qquad \frac{r_1}{r_2} = \frac{m_1}{m_2} \qquad \frac{r_2 - r_1}{r} = \sqrt{\frac{m_2}{m_1}} - \sqrt{\frac{m_1}{m_2}} \qquad \frac{r_1 + r_2}{r} = \sqrt{\frac{m_2}{m_1}} + \sqrt{\frac{m_1}{m_2}}
 ```
 
@@ -253,7 +253,7 @@ The value 8.91 seen in the Measurement Point tool is (r₂ − r₁)/r for the M
 
 Squaring the sum gives the reduced mass μ = m₁m₂/(m₁ + m₂), the mass that appears in every two-body orbit:
 
-```latex
+```math
 \left(\frac{r_1 + r_2}{r}\right)^2 = \frac{(m_1+m_2)^2}{m_1 m_2} = \frac{m_1 + m_2}{\mu} \qquad \left(\frac{r_2 - r_1}{r}\right)^2 = \frac{m_1 + m_2}{\mu} - 4
 ```
 
@@ -268,13 +268,13 @@ So r₁ and r₂ encode the total mass M = m₁ + m₂ in units of μ: M = μ·(
 
 The orbit brings time back through the speed v, so it can measure G. In our variables:
 
-```latex
+```math
 G = \frac{v^2\, r_1 r_2}{m_2\, r} \;\xrightarrow{\;r_1 r_2 = r^2\;}\; G = \frac{v^2\, r}{m_2}
 ```
 
 For the exact two-body orbit, v is the relative speed and the mass is the total M = m₁ + m₂. Writing M through the reduced mass and r₁, r₂:
 
-```latex
+```math
 G = \frac{v^2\, r}{m_1 + m_2} = \frac{v^2\, r}{\mu}\left(\frac{r}{r_1 + r_2}\right)^2 = \frac{v^2\, r^3}{\mu\,(r_1 + r_2)^2}
 ```
 
@@ -284,7 +284,7 @@ Earth–Sun check: 29.78 km/s, 1 AU and M = 1.989×10³⁰ kg give G = 6.67×10�
 
 F\_max = c⁴/G is the definition, so it does not measure G by itself. It becomes useful with the equal-strength level at P, L = √(F/F\_max) = ρ₁/r₁ = ρ₂/r₂ (section 7, Option C). Since ρ = G·m/c²:
 
-```latex
+```math
 G = \frac{c^4}{F_{\max}} = \frac{L\,c^2\, r_1}{m_1} = \frac{L\,c^2\, r_2}{m_2} = \frac{F\, r_1 r_2}{m_1 m_2}
 ```
 
@@ -296,7 +296,7 @@ Earth–Sun check: L = 1.71×10⁻¹¹, so L·c²·r₁/m₁ = 1.71×10⁻¹¹ �
 
 Combining the orbit with the equal-strength level ties v, P and F\_max together without G:
 
-```latex
+```math
 \frac{v^2}{c^2} = \frac{\rho_2}{r} = L\,\frac{r_2}{r} \qquad\Rightarrow\qquad v = c\,\sqrt{L\,\frac{r_2}{r}}
 ```
 
@@ -318,7 +318,7 @@ The equal-strength point and the orbit meet in one number, the potential depth a
 
 A body's potential depth at distance d is Φ = G·m/d (energy per kg). Since ρ/d = Φ/c², equal strength at P means:
 
-```latex
+```math
 \Phi_P = \frac{G\,m_1}{r_1} = \frac{G\,m_2}{r_2} = L\,c^2
 ```
 
@@ -326,7 +326,7 @@ A body's potential depth at distance d is Φ = G·m/d (energy per kg). Since ρ/
 
 For a circular orbit, v² = G·m₂/r, the Sun's potential depth at Earth's distance r. Moving out from r to r₂ lowers the depth by the factor r/r₂:
 
-```latex
+```math
 \Phi_P = v^2\,\frac{r}{r_2} = v^2\sqrt{\frac{m_1}{m_2}}
 ```
 
@@ -338,7 +338,7 @@ Earth–Sun check: L·c² = 1.71×10⁻¹¹ × 8.99×10¹⁶ = 1.54×10⁶ J/kg,
 
 Dividing the potential depth by mass per distance at P:
 
-```latex
+```math
 G = \Phi_P\,\frac{r_1}{m_1} = \Phi_P\,\frac{r_2}{m_2} = v^2\sqrt{\frac{m_1}{m_2}}\,\frac{r_1}{m_1} = \frac{v^2\, r}{m_2} = \frac{L\,c^2\, r_1}{m_1}
 ```
 
@@ -387,7 +387,7 @@ Every input must come from a basic instrument, without using G:
 
 Units then force the shape of any such formula:
 
-```latex
+```math
 G = (\text{pure number}) \times \frac{\text{length}^3}{\text{mass} \times \text{time}^2}
 ```
 
@@ -399,13 +399,13 @@ A rod of length L carries two small balls and hangs from a thin wire. Two large 
 
 The swing period gives the wire's stiffness, and the twist balances gravity's torque:
 
-```latex
+```math
 \kappa = \frac{2\pi^2\, m\, L^2}{T^2} \qquad \kappa\,\theta = \frac{G\,M\,m\,L}{r^2}
 ```
 
 The small-ball mass m cancels:
 
-```latex
+```math
 G = \frac{2\pi^2\, L\, r^2\, \theta}{M\, T^2}
 ```
 
@@ -432,7 +432,7 @@ G = 2π² × 1.86 × 0.225² × 1.00×10⁻³ / (158 × 420²) = 6.67×10⁻¹¹
 
 Kepler's law gives a cleaner ratio. Any small body orbiting a known mass M gives:
 
-```latex
+```math
 G = \frac{4\pi^2}{M}\cdot\frac{a^3}{T^2} = \frac{4\pi^2\,(r_1 r_2)^{3/2}}{M\,T^2}
 ```
 
@@ -461,13 +461,13 @@ G can be read as a balance ratio without a lab instrument, with time as the only
 
 In a circular orbit, gravity exactly balances the turning motion. That balance contains only geometry and observed time:
 
-```latex
+```math
 K = \frac{4\pi^2\, a^3}{T^2} = v^2\, r
 ```
 
 K is the body's gravitational mass in m³/s², read straight from its orbit with no G and no instrument. (K is not the reduced mass μ of section 8, which is in kg.) A body also has an inertial mass M in kg, which is a balance too: force against acceleration, F = M·a. G is the exchange rate between the two balances:
 
-```latex
+```math
 G = \frac{K}{M} = \frac{\text{gravitational mass (orbit)}}{\text{inertial mass } (F = M a)}
 ```
 
@@ -483,13 +483,13 @@ The ratio is the same for every body. That is the equivalence principle: gravita
 
 Section 8 gives a second balance ratio, about how the two bodies share one orbit. It comes only from where P sits:
 
-```latex
+```math
 \frac{\mu}{M} = \left(\frac{r}{r_1 + r_2}\right)^2 = \frac{m_1 m_2}{(m_1 + m_2)^2}
 ```
 
 This ratio has no units and changes from system to system, so it is not G. Splitting G = K/M through the reduced mass μ:
 
-```latex
+```math
 G = \frac{K}{M} = \frac{K}{\mu}\cdot\frac{\mu}{M} = \frac{K}{\mu}\left(\frac{r}{r_1 + r_2}\right)^2
 ```
 
@@ -512,7 +512,7 @@ This is why K and μ must stay separate symbols. Writing both as μ would turn K
 
 From section 7, F = F\_max·(ρ₁/r₁)·(ρ₂/r₂). Each ratio ρ/r reaches 1 when that body's P sits at its gravitational radius, where its pull matches the limit set by light:
 
-```latex
+```math
 F = F_{\max} \text{ when } \frac{\rho_1}{r_1} = \frac{\rho_2}{r_2} = 1, \qquad G = \frac{c^4}{F_{\max}}
 ```
 
@@ -522,13 +522,13 @@ F\_max is not measured: it is the force at the far end of the balance scale. Eve
 
 Any mass has a quantum size, ħ/(m·c), and a gravitational size, G·m/c². They balance at exactly one mass, the Planck mass:
 
-```latex
+```math
 m_P = \sqrt{\frac{\hbar\, c}{G}} = 2.18\times10^{-8}\ \text{kg} \qquad G = \frac{\hbar\, c}{m_P^2}
 ```
 
 Comparing a real particle with that balance point removes every unit:
 
-```latex
+```math
 \alpha_G = \left(\frac{m_p}{m_P}\right)^2 = \frac{G\, m_p^2}{\hbar\, c} = 5.9\times10^{-39}
 ```
 
@@ -554,7 +554,7 @@ The balances fix what G means, not its value. Each keeps one observed number: T 
 
 The orbit gives one total balance, K. The point P splits that total between the two bodies. G turns each body's share back into kilograms:
 
-```latex
+```math
 G = \frac{K}{\mu}\left(\frac{r}{r_1 + r_2}\right)^2 = \frac{K}{M}
 ```
 
@@ -562,7 +562,7 @@ G = \frac{K}{\mu}\left(\frac{r}{r_1 + r_2}\right)^2 = \frac{K}{M}
 
 K = 4π²a³/T² comes from watching the orbit. It is not one body's property; it is the pull of the pair together:
 
-```latex
+```math
 K = G\,(m_1 + m_2) = G\,M
 ```
 
@@ -572,19 +572,19 @@ The orbit cannot tell how K divides between the two bodies. That is what P does.
 
 Taken as fractions of their sum, r₁ and r₂ equal each body's share of the total mass:
 
-```latex
+```math
 \frac{r_1}{r_1 + r_2} = \frac{m_1}{M} = f_1 \qquad \frac{r_2}{r_1 + r_2} = \frac{m_2}{M} = f_2
 ```
 
 So P splits r₁ + r₂ in the same proportions as the masses. Each body's share of the orbit balance is its distance to P over the total:
 
-```latex
+```math
 G\,m_1 = K\,\frac{r_1}{r_1 + r_2} \qquad G\,m_2 = K\,\frac{r_2}{r_1 + r_2}
 ```
 
 The sharing factor is the product of the two shares. Since r = √(r₁·r₂):
 
-```latex
+```math
 \left(\frac{r}{r_1 + r_2}\right)^2 = \frac{r_1 r_2}{(r_1 + r_2)^2} = f_1 f_2 = \frac{\mu}{M}
 ```
 
@@ -592,7 +592,7 @@ It is largest, 1/4, for equal masses, and tiny when one body dominates.
 
 ### G as the exchange rate
 
-```latex
+```math
 G = \frac{K}{\mu}\, f_1 f_2 = \frac{K}{M}
 ```
 
@@ -632,7 +632,7 @@ G can be replaced by what the orbit measures, G = K/M with K = 4π²a³/T² and 
 
 Writing G₁ = √m₁·r₁/r and G₂ = √m₂·r₂/r gives, when r₁·r₂ = r²:
 
-```latex
+```math
 G_1 G_2 = \sqrt{m_1 m_2}\,\frac{r_1 r_2}{r^2} = \sqrt{m_1 m_2}
 ```
 
@@ -648,11 +648,11 @@ Newton's law already contains the masses. G is the exchange rate that turns kg i
 
 Replace √G by √(K/M), which uses m₁, m₂ and the observed orbit:
 
-```latex
+```math
 \sqrt{G} \;\rightarrow\; \sqrt{\frac{K}{m_1 + m_2}} = \frac{2\pi}{T}\sqrt{\frac{a^3}{m_1 + m_2}}
 ```
 
-```latex
+```math
 G_1 = \frac{2\pi}{T}\sqrt{\frac{a^3}{m_1 + m_2}}\cdot\frac{r_1}{r} \qquad G_2 = \frac{2\pi}{T}\sqrt{\frac{a^3}{m_1 + m_2}}\cdot\frac{r_2}{r}
 ```
 
@@ -662,7 +662,7 @@ The units are √(m³/(kg·s²)), the same as √G.
 
 Section 12 gives each body's share of the orbit balance from P, G·mᵢ = K·fᵢ with fᵢ = rᵢ/(r₁ + r₂). Each body can then carry its own mass:
 
-```latex
+```math
 G_1 = \sqrt{\frac{K f_1}{m_1}}\cdot\frac{r_1}{r} \qquad G_2 = \sqrt{\frac{K f_2}{m_2}}\cdot\frac{r_2}{r}
 ```
 
@@ -674,7 +674,7 @@ Earth check: K·f₁/m₁ = 3.986×10¹⁴ / 5.972×10²⁴ = 6.674×10⁻¹¹ �
 
 Each body's gravitational charge is √G·mᵢ = √(K·fᵢ·mᵢ). Putting both into the split force, and using f₁·f₂ = μ/M and m₁·m₂ = μ·M, the square roots combine to exactly μ:
 
-```latex
+```math
 F = \frac{\sqrt{K f_1 m_1}}{r_1}\cdot\frac{\sqrt{K f_2 m_2}}{r_2} = \frac{\mu\, K}{r_1 r_2}
 ```
 
@@ -719,13 +719,13 @@ F is the pull between one particular pair of bodies. G is the same for every pai
 
 The per-body parts from section 13 multiply to:
 
-```latex
+```math
 G_1 G_2 = \frac{K}{M}\cdot\frac{r_1 r_2}{r^2} = G\,\varepsilon
 ```
 
 The force with no G written is F = μ·K/(r₁·r₂). Dividing one by the other:
 
-```latex
+```math
 F = G_1 G_2\,\frac{m_1 m_2}{r_1 r_2}
 ```
 
@@ -739,13 +739,13 @@ Take the standard case:
 - K = G × 2 kg
 - P at the apex of the equilateral triangle, with r₁ = r₂ = r = 1 m
 
-```latex
+```math
 F = \frac{\mu\,K}{r_1 r_2} = \frac{0.5\ \text{kg} \times (G \times 2\ \text{kg})}{1\ \text{m} \times 1\ \text{m}} = G \times 1\ \text{kg}^2/\text{m}^2 = 6.674\times10^{-11}\ \text{N}
 ```
 
 So G is the force between two 1 kg masses 1 m apart:
 
-```latex
+```math
 G = \frac{F\, r_1 r_2}{m_1 m_2}
 ```
 
@@ -780,7 +780,7 @@ Both say the same thing: 1 kg of mass produces 6.674×10⁻¹¹ units of gravity
 
 Putting the orbit form G = 4π²a³/(T²·M) into the unit case, a speck orbiting a 1 kg ball at a = 1 m, G depends only on the period T₁ of that unit orbit:
 
-```latex
+```math
 G = \left(\frac{2\pi}{T_1}\right)^2 \times \frac{1\ \text{m}^3}{1\ \text{kg}}
 \qquad
 T_1 = \frac{2\pi}{\sqrt{G}} = 7.69\times10^5\ \text{s} \approx 8.9\ \text{days}
@@ -798,7 +798,7 @@ In the unit pair of two 1 kg masses:
 
 G is the unit pull at the unit balance point, and every real system is a scaled copy:
 
-```latex
+```math
 F = G\cdot\frac{(m_1/1\ \text{kg})\,(m_2/1\ \text{kg})}{(r_1/1\ \text{m})\,(r_2/1\ \text{m})}\ \text{N}
 ```
 
