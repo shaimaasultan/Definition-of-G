@@ -621,3 +621,66 @@ Moon / Earth (K ≈ 4.02×10¹⁴ m³/s², from v and r):
 The Moon/Earth values are about 0.5% off because the Moon's orbit is not a perfect circle.
 
 Equal masses show the mechanism plainly: f₁ = f₂ = 1/2, so f₁·f₂ = 1/4, and P sits at the apex of the equilateral triangle from section 6. Then K/μ = 4G, and the factor of 4 is exactly undone by the 1/4 from P.
+
+## 13. Symbol reference
+
+Every symbol used in sections 1–12, with what it means, what it looks like in the geometry, its formula and how it is defined. Earth–Sun values are in brackets. M₁ and M₂ name the bodies; m₁ and m₂ are their masses; M is the total mass.
+
+### Bodies and distances
+
+| Symbol | Meaning | Geometric meaning | Formula | Definition |
+| --- | --- | --- | --- | --- |
+| m₁ | Mass of the small body M₁ (Earth) \[5.972×10²⁴ kg\] | The circle M₁ in the sketch | m₁ = f₁·M | Inertial mass in kg, from a balance (F = m·a) |
+| m₂ | Mass of the large body M₂ (Sun) \[1.989×10³⁰ kg\] | The circle M₂ in the sketch | m₂ = f₂·M | Inertial mass in kg, from a balance |
+| M | Total mass of the pair | – | M = m₁ + m₂ = μ·((r₁ + r₂)/r)² | Sum of the two masses |
+| μ | Reduced mass \[≈ 5.97×10²⁴ kg\] | – | μ = m₁m₂/(m₁ + m₂) = M·f₁f₂ | The effective mass of the two-body orbit |
+| r | Separation \[1.496×10¹¹ m, 1 AU\] | The segment between the two centres | r = √(r₁·r₂) | Measured centre-to-centre distance |
+| r₁ | Distance from M₁ to P \[2.59×10⁸ m\] | Radius of the circle around M₁ on which P lies | r₁ = r·√(m₁/m₂) | Distance at which M₁'s pull equals M₂'s pull at M₁ |
+| r₂ | Distance from M₂ to P \[8.63×10¹³ m, 577 AU\] | Radius of the circle around M₂ on which P lies | r₂ = r·√(m₂/m₁) | Distance at which M₂'s pull falls to M₁'s pull at distance r |
+| P | The measuring point | Where the r₁ circle around M₁ meets the r₂ circle around M₂; for a shared point, on the Cassini oval | M₁P · M₂P = r² | The point both r₁ and r₂ are measured to |
+| a | Orbit size (semi-major axis) | Radius of the orbit, for a circle a = r | a = r (circle) | Observed size of the orbit |
+
+### Balance and geometry
+
+| Symbol | Meaning | Geometric meaning | Formula | Definition |
+| --- | --- | --- | --- | --- |
+| ε | Balance ratio \[1 when balanced\] | Where the point (r₁, r₂) sits against the hyperbola r₁r₂ = r²: below is too strong, above is too weak | ε = r₁·r₂/r² | How far the r₁·r₂ split is from Newton's r² |
+| k | Scale factor \[1.733×10⁻³\] | How much r₁ is shrunk and r₂ stretched relative to r | k = r₁/r = r/r₂ = √(m₁/m₂) | The stretch that keeps r₁·r₂ = r² |
+| φ | Golden ratio \[1.618\] | Where the Cassini oval crosses the line M₁M₂: at 0.618·r and 1.618·r | φ = (1 + √5)/2 | Solution of d(d + r) = r² on the line |
+| f₁, f₂ | Mass shares \[3.0×10⁻⁶ and 0.999997\] | P divides r₁ + r₂ into these proportions | fᵢ = rᵢ/(r₁ + r₂) = mᵢ/M | Each body's fraction of the total mass |
+| f₁·f₂ | Sharing ratio \[3.0×10⁻⁶\] | The square of r/(r₁ + r₂) | f₁·f₂ = (r/(r₁ + r₂))² = μ/M | How the two bodies share one orbit balance; largest (1/4) for equal masses |
+
+### Force and orbit
+
+| Symbol | Meaning | Geometric meaning | Formula | Definition |
+| --- | --- | --- | --- | --- |
+| F | Newton's gravitational force \[3.54×10²² N\] | – | F = G·m₁m₂/r² | Mutual pull between the two bodies |
+| F′ | Modified force | – | F′ = G·m₁m₂/(r₁·r₂) = F/ε | Newton's law with r² split into r₁·r₂ |
+| v | Orbital speed \[29.78 km/s\] | Speed along the orbit circle, tangent to it | v = √(G·m₂·r/(r₁r₂)), which is √(G·m₂/r) when balanced | Observed: v = 2πr/T |
+| T | Orbital period \[1 year\] | Time for one full loop of the orbit | T = 2π·√(a³/K) | Observed with a clock |
+| K | Orbit balance, the pair's gravitational mass \[1.327×10²⁰ m³/s²\] | – | K = 4π²a³/T² = v²·r = G·M | Read from orbit size and timing, with no G |
+
+### G and its parts
+
+| Symbol | Meaning | Geometric meaning | Formula | Definition |
+| --- | --- | --- | --- | --- |
+| G | Gravitational constant \[6.674×10⁻¹¹ m³·kg⁻¹·s⁻²\] | – | G = K/M = (K/μ)·(r/(r₁ + r₂))² | The fixed exchange rate between gravitational mass (K) and inertial mass (M) |
+| G₁, G₂ (Option A) | Local values of G seen from each side of P | Scale with the ratio of distances to P | G₁ = G·r₁/r₂, G₂ = G·r₂/r₁ | G = √(G₁·G₂), as r = √(r₁·r₂) |
+| G₁, G₂ (Option B) | Each body's half of G | Scale with each distance to P | G₁ = √G·r₁/r, G₂ = √G·r₂/r | G₁·G₂ = G·ε, exactly G on the Cassini oval |
+| Φ, Φₚ | Potential depth; Φₚ is its value at P \[1.54×10⁶ J/kg\] | – | Φ = G·m/d; Φₚ = L·c² = v²·√(m₁/m₂) | Energy per kg needed to climb out of a body's pull |
+| ℓ, θ, κ (Cavendish) | Rod length, twist angle, wire stiffness (section 10, where the rod length is written L) | Rod hanging from a wire, twisted by angle θ | κ = 2π²·m·ℓ²/T²; G = 2π²·ℓ·r²·θ/(M·T²) | Lab measurement of G from lengths, an angle, a time and a mass |
+
+### Light and quantum
+
+| Symbol | Meaning | Geometric meaning | Formula | Definition |
+| --- | --- | --- | --- | --- |
+| c | Speed of light \[2.998×10⁸ m/s\] | Distance light travels per second | – | Fixed by the SI definition of the metre |
+| ρ (ρ₁, ρ₂) | Gravitational radius \[4.43 mm Earth, 1,477 m Sun\] | The distance at which a body's strength ratio ρ/d reaches 1 | ρ = G·m/c² | A mass turned into a length |
+| F\_max | Force limit \[1.21×10⁴⁴ N\] | The force when both bodies' P sit at their gravitational radii | F\_max = c⁴/G | The far end of the balance scale |
+| L | Equal-strength level \[1.71×10⁻¹¹\] | Height of the horizontal level line in the Equal-Strength Point tool | L = ρ₁/r₁ = ρ₂/r₂ = √(F/F\_max) | The shared strength ratio at P (not the Cavendish rod length) |
+| ħ | Reduced Planck constant \[1.055×10⁻³⁴ J·s\] | – | ħ = h/(2π) | Quantum of action |
+| m\_P | Planck mass \[2.18×10⁻⁸ kg\] | – | m\_P = √(ħ·c/G) | The mass whose quantum size equals its gravitational size |
+| m\_p | Proton mass \[1.673×10⁻²⁷ kg\] | – | – | Measured particle mass |
+| α\_G | Gravitational coupling \[5.9×10⁻³⁹\] | – | α\_G = G·m\_p²/(ħ·c) = (m\_p/m\_P)² | Unit-free strength of gravity: how far a proton sits below the Planck balance point |
+
+Two letters have more than one use in the doc: L is the equal-strength level in sections 7–11 but the rod length in section 10 (written ℓ here), and μ is the reduced mass, while the orbit balance is K.
